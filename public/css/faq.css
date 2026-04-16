@@ -1,0 +1,100 @@
+/* ── Accordion ───────────────────────────────────────────── */
+.accordion-item {
+  border: 1px solid rgba(0,0,0,.07);
+  border-radius: 12px !important;
+  overflow: hidden;
+  margin-bottom: .55rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  transition: box-shadow .2s;
+}
+
+.accordion-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+
+.accordion-button {
+  font-weight: 600;
+  font-size: .93rem;
+  color: #1E2A39;
+  background: white;
+  padding: 1rem 1.25rem;
+  border-radius: 0 !important;
+  transition: background .2s, color .2s;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #E8491D;
+  background: #fff8f0;
+  box-shadow: inset 0 -1px 0 rgba(232,73,29,.12);
+}
+
+.accordion-button::after {
+  filter: none;
+  transition: transform .3s ease;
+}
+
+.accordion-button:focus {
+  box-shadow: 0 0 0 .2rem rgba(248,167,28,.22);
+  z-index: 1;
+}
+
+.accordion-body {
+  font-size: .9rem;
+  color: #4a5568;
+  line-height: 1.75;
+  background: #fdfeff;
+  padding: 1rem 1.25rem;
+}
+
+/* ── Contact card ────────────────────────────────────────── */
+.contact-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2.25rem 2rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,.08);
+  border: 1px solid rgba(0,0,0,.04);
+}
+
+.contact-card .form-control {
+  border-radius: 10px;
+  border: 1.5px solid #e2e8f0;
+  font-size: .9rem;
+  padding: .62rem 1rem;
+  transition: border-color .2s, box-shadow .2s;
+  background: #fafbfd;
+}
+
+.contact-card .form-control:focus {
+  border-color: #F8A71C;
+  box-shadow: 0 0 0 3px rgba(248,167,28,.18);
+  background: white;
+}
+
+.contact-card label {
+  font-size: .78rem;
+  font-weight: 700;
+  color: #2d3748;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  margin-bottom: .3rem;
+}
+
+/* ── Submit button ───────────────────────────────────────── */
+.custom-btn {
+  background: linear-gradient(135deg, #E8491D, #F8A71C);
+  border: none;
+  color: white;
+  font-weight: 700;
+  border-radius: 50px;
+  padding: .72rem 1.5rem;
+  box-shadow: 0 3px 12px rgba(232,73,29,.3);
+  transition: opacity .2s, transform .2s, box-shadow .2s;
+  letter-spacing: .3px;
+}
+
+.custom-btn:hover {
+  opacity: .93;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(232,73,29,.42);
+  color: white;
+}
+
+.custom-btn:active { transform: translateY(0); }

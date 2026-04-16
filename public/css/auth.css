@@ -1,0 +1,259 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: stretch;
+  background: #0f1622;
+}
+
+.login-wrapper { display: flex; width: 100%; min-height: 100vh; }
+
+/* ── Brand panel (left) ──────────────────────────────────── */
+.login-brand {
+  flex: 1;
+  background: linear-gradient(145deg, #141d29 0%, #1E2A39 55%, #2a1810 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-brand::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Glowing accent blobs */
+.login-brand::after {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  right: -80px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(232,73,29,.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.brand-logo {
+  height: 72px;
+  margin-bottom: 2rem;
+  position: relative;
+  filter: drop-shadow(0 4px 16px rgba(248,167,28,.3));
+}
+
+.brand-title {
+  color: #F8A71C;
+  font-size: 2.4rem;
+  font-weight: 800;
+  text-align: center;
+  line-height: 1.15;
+  position: relative;
+  letter-spacing: -1px;
+}
+
+.brand-subtitle {
+  color: rgba(255,255,255,.6);
+  font-size: .9rem;
+  text-align: center;
+  margin-top: .75rem;
+  line-height: 1.7;
+  position: relative;
+  max-width: 280px;
+}
+
+.brand-features {
+  list-style: none;
+  padding: 0;
+  margin-top: 2.5rem;
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+}
+
+.brand-features li {
+  color: rgba(255,255,255,.7);
+  font-size: .875rem;
+  padding: .55rem 0;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+
+.brand-features li:last-child { border-bottom: none; }
+.brand-features li i { color: #F8A71C; font-size: 1rem; width: 20px; text-align: center; flex-shrink: 0; }
+
+/* ── Form panel (right) ──────────────────────────────────── */
+.login-form-panel {
+  width: 100%;
+  max-width: 480px;
+  background: #f4f6fa;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 2.5rem;
+  animation: slideInRight .4s ease;
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Tab switcher ────────────────────────────────────────── */
+.auth-tabs {
+  display: flex;
+  background: #e2e8f0;
+  border-radius: 50px;
+  padding: 4px;
+  margin-bottom: 2rem;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.08);
+}
+
+.auth-tab-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: .6rem 1rem;
+  border-radius: 50px;
+  font-family: inherit;
+  font-size: .875rem;
+  font-weight: 600;
+  color: #718096;
+  cursor: pointer;
+  transition: all .25s ease;
+}
+
+.auth-tab-btn.active {
+  background: linear-gradient(135deg, #E8491D, #F8A71C);
+  color: white;
+  box-shadow: 0 3px 10px rgba(232,73,29,.38);
+}
+
+/* ── Auth forms ──────────────────────────────────────────── */
+.auth-form { display: none; }
+.auth-form.visible { display: block; animation: fadeInForm .28s ease; }
+
+@keyframes fadeInForm {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.auth-form h2 {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #1E2A39;
+  margin-bottom: .35rem;
+  letter-spacing: -.5px;
+}
+
+.auth-form .form-hint { font-size: .85rem; color: #718096; margin-bottom: 1.75rem; }
+.auth-form .form-group { margin-bottom: 1rem; }
+
+.auth-form label {
+  display: block;
+  font-size: .78rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: .35rem;
+  text-transform: uppercase;
+  letter-spacing: .45px;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: .7rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: .9rem;
+  color: #2d3748;
+  background: white;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+
+.auth-form input:focus {
+  border-color: #F8A71C;
+  box-shadow: 0 0 0 3px rgba(248,167,28,.18);
+}
+
+.auth-form input::placeholder { color: #b0bec5; }
+
+/* ── Submit button ───────────────────────────────────────── */
+.btn-auth {
+  width: 100%;
+  padding: .85rem;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #E8491D, #F8A71C);
+  color: white;
+  font-family: inherit;
+  font-size: .95rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 1.25rem;
+  letter-spacing: .3px;
+  box-shadow: 0 4px 16px rgba(232,73,29,.38);
+  transition: opacity .2s, transform .2s, box-shadow .2s;
+}
+
+.btn-auth:hover {
+  opacity: .93;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 22px rgba(232,73,29,.48);
+}
+
+.btn-auth:active { transform: translateY(0); }
+
+/* ── Modals ──────────────────────────────────────────────── */
+.modal-content {
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 48px rgba(0,0,0,.2);
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #E8491D, #F8A71C);
+  border-bottom: none;
+  padding: 1rem 1.25rem;
+}
+
+.modal-title { color: white; font-weight: 700; font-size: 1rem; }
+.modal-header .btn-close { filter: brightness(0) invert(1); }
+
+.modal-footer .btn-primary {
+  background: linear-gradient(135deg, #E8491D, #F8A71C);
+  border-color: transparent;
+  color: white;
+  border-radius: 50px;
+  font-weight: 600;
+}
+
+.modal-footer .btn-primary:hover {
+  background: linear-gradient(135deg, #c63800, #E8491D);
+  border-color: transparent;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .login-brand { display: none; }
+  .login-form-panel { max-width: 100%; padding: 2rem 1.5rem; }
+}
+
+@media (max-width: 420px) {
+  .login-form-panel { padding: 1.5rem 1.25rem; }
+  .auth-form h2 { font-size: 1.3rem; }
+}

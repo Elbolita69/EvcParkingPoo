@@ -1,0 +1,128 @@
+/* ── Table header ────────────────────────────────────────── */
+#reservationHistoryTable thead th {
+  background: linear-gradient(90deg, #1E2A39, #2C3E50);
+  color: rgba(255,255,255,.9);
+  font-weight: 600;
+  font-size: .82rem;
+  letter-spacing: .35px;
+  text-transform: uppercase;
+  border: none;
+  padding: .85rem .75rem;
+}
+
+#reservationHistoryTable thead th:first-child { border-radius: 10px 0 0 0; }
+#reservationHistoryTable thead th:last-child  { border-radius: 0 10px 0 0; }
+
+/* ── Row hover ───────────────────────────────────────────── */
+#reservationHistoryTable tbody tr {
+  transition: background .15s;
+}
+
+#reservationHistoryTable tbody tr:hover {
+  background: rgba(248,167,28,.06) !important;
+}
+
+#reservationHistoryTable tbody td {
+  font-size: .875rem;
+  vertical-align: middle;
+  padding: .65rem .75rem;
+  border-bottom: 1px solid rgba(0,0,0,.04);
+}
+
+/* ── Status badge in table ───────────────────────────────── */
+.badge-reservado {
+  background: rgba(248,167,28,.15);
+  color: #b07800;
+  border-radius: 50px;
+  padding: .3em .8em;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+
+.badge-cancelado {
+  background: rgba(220,53,69,.12);
+  color: #b52131;
+  border-radius: 50px;
+  padding: .3em .8em;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+
+/* ── DataTables controls ─────────────────────────────────── */
+.dataTables_wrapper .dataTables_filter input {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 50px;
+  padding: .38rem .95rem;
+  font-size: .85rem;
+  outline: none;
+  background: white;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+  border-color: #F8A71C;
+  box-shadow: 0 0 0 3px rgba(248,167,28,.15);
+}
+
+.dataTables_wrapper .dataTables_length select {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: .3rem .5rem;
+  font-size: .85rem;
+  outline: none;
+}
+
+.dataTables_wrapper .dataTables_info { font-size: .82rem; color: #718096; }
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  border-radius: 50px !important;
+  font-size: .8rem;
+  margin: 0 2px;
+  transition: all .2s;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+  background: linear-gradient(135deg, #E8491D, #F8A71C) !important;
+  border-color: transparent !important;
+  color: white !important;
+  box-shadow: 0 3px 8px rgba(232,73,29,.3);
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:not(.current):hover {
+  background: rgba(248,167,28,.1) !important;
+  border-color: transparent !important;
+  color: #b07800 !important;
+}
+
+/* ── Export buttons ──────────────────────────────────────── */
+#exportExcel,
+#exportPdf {
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: .875rem;
+  padding: .5rem 1.5rem;
+  transition: all .22s ease;
+  letter-spacing: .2px;
+}
+
+#exportExcel:hover,
+#exportPdf:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(0,0,0,.18);
+}
+
+/* ── Delete button in table ──────────────────────────────── */
+.delete-btn {
+  border-radius: 50px;
+  font-size: .76rem;
+  padding: .28rem .75rem;
+  font-weight: 600;
+  transition: all .2s;
+}
+
+.delete-btn:hover { transform: translateY(-1px); }

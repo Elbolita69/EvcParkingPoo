@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EVC Parking — Lector de Placas (Local)</title>
+  <link rel="icon" href="{{ url_for('static', filename='Img/evcblanco.png') }}" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='evc-local.css') }}">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <img src="{{ url_for('static', filename='Img/evcblanco.png') }}" alt="EVC Parking">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link active" href="/"><i class="fa-solid fa-camera me-1"></i>Cámara</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/placas"><i class="fa-solid fa-list me-1"></i>Registros</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero-section hero-sm">
+    <div class="container">
+      <h1><i class="fa-solid fa-camera me-2"></i>Lector de Placas</h1>
+      <p>Servidor local · Webcam PC y cámara móvil</p>
+    </div>
+  </header>
+
+  <main class="container py-4">
+    <div class="row g-4">
+
+      <!-- ── Camera column ──────────────────────────────── -->
+      <div class="col-lg-5">
+        <div class="card h-100">
+          <div class="card-header cam-header">
+            <i class="fa-solid fa-camera-retro me-2"></i>Captura
+          </div>
+          <div class="card-body p-3 d-flex flex-column">
+
+            <!-- PC webcam stream -->
+            <div id="webcamWrap" class="cam-preview-wrap mb-3">
+              <img id="webcamFeed" src="/video_feed" class="cam-video" alt="Webcam">
+              <div class="cam-overlay-label">
+                <i class="fa-solid fa-circle text-danger cam-rec-dot"></i> Webcam en vivo
+              </div>
+            </div>
+
+            <!-- Mobile file upload -->
+            <div class="cam-file-wrap mb-3">
+              <label for="mobileFile" class="cam-file-label-sm">
+                <i class="fa-solid fa-mobile-screen-button me-2"></i>
+                Captura desde el teléfono
+              </label>
+              <input type="file" id="mobileFile" accept="image/*" capture="environment" class="d-none">
+              <div id="mobilePreviewWrap" style="display:none;" class="cam-preview-wrap mt-2">
+                <img id="mobilePreview" class="cam-video" alt="Preview">
+              </div>
+            </div>
+
+            <!-- Spinner -->
+            <div id="loadingWrap" class="text-center py-2" style="display:none;">
+              <div class="cam-spinner mx-auto"></div>
+              <p class="text-muted mt-2 mb-0" style="font-size:.82rem;">Analizando...</p>
+            </div>
+
+            <!-- Error -->
+            <div id="errorWrap" class="alert cam-alert-danger" style="display:none;">
+              <i class="fa-solid fa-triangle-exclamation me-1"></i>
+              <span id="errorMsg">Error</span>
+            </div>
+
+            <div class="mt-auto d-flex flex-column gap-2 pt-2">
+              <button id="captureWebcam" class="btn cam-capture-btn" onclick="captureWebcam()">
+                <i class="fa-solid fa-circle-dot me-2"></i>Capturar Webcam
+              </button>
+              <button id="analyzeMobile" class="btn cam-btn-secondary" onclick="analyzeMobile()" disabled>
+                <i class="fa-solid fa-mobile-screen-button me-2"></i>Analizar Foto del Teléfono
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Result + history column ───────────────────── -->
+      <div class="col-lg-7 d-flex flex-column gap-4">
+
+        <!-- Last detection -->
+        <div class="card" id="resultCard" style="display:none;">
+          <div class="card-header cam-header">
+            <i class="fa-solid fa-circle-check me-2"></i>Última Detección
+          </div>
+          <div class="card-body p-4 text-center">
+            <div class="plate-display" id="plateDisplay">---</div>
+            <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
+              <span class="cam-detail-pill" id="confDisplay">—</span>
+              <span class="cam-detail-pill" id="typeDisplay">—</span>
+              <span class="cam-detail-pill" id="tsDisplay">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detections history from Firebase -->
+        <div class="card flex-grow-1">
+          <div class="card-header cam-header d-flex align-items-center justify-content-between">
+            <span><i class="fa-solid fa-list me-2"></i>Detecciones Recientes (Firebase)</span>
+            <span class="cam-live-badge"><i class="fa-solid fa-circle me-1"></i>Live</span>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table cam-table mb-0">
+                <thead>
+                  <tr>
+                    <th>Placa</th>
+                    <th>Confianza</th>
+                    <th>Tipo</th>
+                    <th>Hora</th>
+                  </tr>
+                </thead>
+                <tbody id="detectionsBody">
+                  <tr id="emptyRow">
+                    <td colspan="4" class="text-center text-muted py-4" style="font-size:.85rem;">
+                      Esperando detecciones...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p><i class="fa-regular fa-copyright me-1"></i>2024 EVC Parking — Servidor local</p>
+  </footer>
+
+  <!-- Firebase (para guardar placas + mostrar historial en tiempo real) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script>
+    // ── Firebase config (mismo que app-config.js) ──────────────
+    firebase.initializeApp({
+      apiKey:            "AIzaSyD5oOWKwiuvlnhGSPm4pXmcHPZKNqQfVEU",
+      authDomain:        "evc-parking.firebaseapp.com",
+      projectId:         "evc-parking",
+      storageBucket:     "evc-parking.firebasestorage.app",
+      messagingSenderId: "989995637427",
+      appId:             "1:989995637427:web:9cfa55a507d4ded9046ec6"
+    });
+    const db = firebase.firestore();
+
+    // ── Mobile file input ───────────────────────────────────────
+    document.getElementById('mobileFile').addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+      const preview = document.getElementById('mobilePreview');
+      preview.src = URL.createObjectURL(file);
+      document.getElementById('mobilePreviewWrap').style.display = 'block';
+      document.getElementById('analyzeMobile').disabled = false;
+    });
+
+    // ── Capture from webcam ─────────────────────────────────────
+    async function captureWebcam() {
+      hideError();
+      setLoading(true);
+      try {
+        const res  = await fetch('/leer_placa', { method: 'POST' });
+        const data = await res.json();
+        setLoading(false);
+        if (data.success) {
+          await saveAndShow(data);
+        } else {
+          showError(data.message || 'No se detectó ninguna placa.');
+        }
+      } catch {
+        setLoading(false);
+        showError('Error de conexión con el servidor local.');
+      }
+    }
+
+    // ── Analyze mobile photo ────────────────────────────────────
+    async function analyzeMobile() {
+      const file = document.getElementById('mobileFile').files[0];
+      if (!file) return;
+      hideError();
+      setLoading(true);
+      const formData = new FormData();
+      formData.append('image', file);
+      try {
+        const res  = await fetch('/leer_placa_upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        setLoading(false);
+        if (data.success) {
+          await saveAndShow(data);
+        } else {
+          showError(data.message || 'No se detectó ninguna placa.');
+        }
+      } catch {
+        setLoading(false);
+        showError('Error al enviar la imagen al servidor.');
+      }
+    }
+
+    // ── Save detection to Firestore ─────────────────────────────
+    async function saveAndShow(data) {
+      try {
+        await db.collection('plateDetections').add({
+          plate:       data.plate,
+          confidence:  data.confidence,
+          vehicleType: data.vehicleType || null,
+          region:      data.region      || null,
+          timestamp:   firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } catch (e) { console.warn('Firestore error:', e); }
+
+      document.getElementById('plateDisplay').textContent = data.plate;
+      document.getElementById('confDisplay').innerHTML    = `<i class="fa-solid fa-gauge me-1"></i>${data.confidence}% confianza`;
+      document.getElementById('typeDisplay').innerHTML    = `<i class="fa-solid fa-car me-1"></i>${data.vehicleType || '—'}`;
+      document.getElementById('tsDisplay').innerHTML      = `<i class="fa-solid fa-clock me-1"></i>${new Date().toLocaleTimeString('es-CO')}`;
+      document.getElementById('resultCard').style.display = 'block';
+    }
+
+    // ── Live Firestore listener ─────────────────────────────────
+    db.collection('plateDetections')
+      .orderBy('timestamp', 'desc')
+      .limit(20)
+      .onSnapshot(snap => {
+        const tbody = document.getElementById('detectionsBody');
+        if (snap.empty) { document.getElementById('emptyRow').style.display = ''; return; }
+        document.getElementById('emptyRow').style.display = 'none';
+
+        tbody.innerHTML = snap.docs.map(doc => {
+          const d   = doc.data();
+          const ts  = d.timestamp?.toDate();
+          const t   = ts ? ts.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '—';
+          const c   = d.confidence || 0;
+          const cls = c >= 85 ? 'high' : c >= 65 ? 'medium' : 'low';
+          return `<tr>
+            <td><span class="cam-plate-cell">${d.plate || '—'}</span></td>
+            <td><span class="cam-confidence ${cls}">${c}%</span></td>
+            <td style="font-size:.8rem;color:#718096;">${d.vehicleType || '—'}</td>
+            <td style="font-size:.8rem;color:#718096;">${t}</td>
+          </tr>`;
+        }).join('');
+      });
+
+    // ── UI helpers ──────────────────────────────────────────────
+    function setLoading(on) {
+      document.getElementById('loadingWrap').style.display = on ? 'block' : 'none';
+      document.getElementById('captureWebcam').disabled    = on;
+    }
+    function showError(msg) {
+      document.getElementById('errorMsg').textContent      = msg;
+      document.getElementById('errorWrap').style.display   = 'block';
+      setTimeout(() => document.getElementById('errorWrap').style.display = 'none', 6000);
+    }
+    function hideError() { document.getElementById('errorWrap').style.display = 'none'; }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

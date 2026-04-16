@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EVC Parking — Inicio</title>
+  <link rel="icon" href="img/evclogo.png" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="Inicio.html">
+        <img src="img/evcblanco.png" alt="EVC Parking">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link" href="Parking.html"><i class="fa-solid fa-square-parking me-1"></i>Parking</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="historialblynk.html"><i class="fa-solid fa-clock-rotate-left me-1"></i>Historial</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="Faq.html"><i class="fa-solid fa-circle-question me-1"></i>FAQ</a>
+          </li>
+          <li class="nav-item ms-lg-2">
+            <a class="nav-link" href="#" id="loginBtn">
+              <i class="fa-solid fa-right-to-bracket me-1"></i>Login
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero-section hero-sm">
+    <div class="container">
+      <h1 id="nombreUsuario">Bienvenido a EVC Parking</h1>
+      <p>Gestiona tu estacionamiento de forma inteligente y eficiente.</p>
+    </div>
+  </header>
+
+  <main class="container py-5">
+    <div class="row g-4">
+      <div class="col-sm-6 col-lg-3">
+        <a href="Parking.html" class="text-decoration-none">
+          <div class="feature-card">
+            <div class="fc-icon"><i class="fa-solid fa-square-parking"></i></div>
+            <h3>Estado Parking</h3>
+            <p>Ver disponibilidad en tiempo real de los espacios.</p>
+          </div>
+        </a>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <a href="Reserva.html" class="text-decoration-none">
+          <div class="feature-card">
+            <div class="fc-icon"><i class="fa-solid fa-calendar-plus"></i></div>
+            <h3>Reservar Espacio</h3>
+            <p>Elige y reserva tu puesto de estacionamiento.</p>
+          </div>
+        </a>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <a href="historialblynk.html" class="text-decoration-none">
+          <div class="feature-card">
+            <div class="fc-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+            <h3>Historial</h3>
+            <p>Consulta el historial de reservas y exporta reportes.</p>
+          </div>
+        </a>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <a href="Estadisticas.html" class="text-decoration-none">
+          <div class="feature-card">
+            <div class="fc-icon"><i class="fa-solid fa-chart-pie"></i></div>
+            <h3>Estadísticas</h3>
+            <p>Visualiza gráficos del estado actual del estacionamiento.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-lg-8 mx-auto">
+        <div class="card p-4">
+          <div class="row align-items-center g-3">
+            <div class="col-auto">
+              <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#E8491D,#F8A71C);display:flex;align-items:center;justify-content:center;">
+                <i class="fa-solid fa-info text-white fs-5"></i>
+              </div>
+            </div>
+            <div class="col">
+              <h5 class="fw-bold mb-1" style="color:#1E2A39;">Información General</h5>
+              <p class="text-muted mb-0" style="font-size:.9rem;">
+                EVC Parking es una plataforma de estacionamiento automatizada con sensores IoT en tiempo real. Gestiona disponibilidad, reservas, acceso de vehículos y administración de usuarios desde un solo lugar.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal fade" id="sesionCerradaModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa-solid fa-right-from-bracket me-2"></i>Sesión Cerrada</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body"><p>La sesión se cerró correctamente. Redirigiendo...</p></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p><i class="fa-regular fa-copyright me-1"></i>2024 EVC Parking. Todos los derechos reservados.</p>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="js/app-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/chatbot.js"></script>
+</body>
+</html>

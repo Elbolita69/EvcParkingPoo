@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuth() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    match /users/{uid} {
+      allow read:          if isAuth();
+      allow create:        if isAuth() && request.auth.uid == uid;
+      allow update:        if isAuth() && (request.auth.uid == uid || isAdmin());
+      allow delete:        if isAdmin();
+    }
+
+    match /reservations/{spotId} {
+      allow read:           if true;
+      allow create, update: if isAuth();
+      allow delete:         if isAdmin();
+    }
+
+    match /blynkReservations/{pin} {
+      allow read:  if true;
+      allow write: if isAuth();
+    }
+
+    match /reservationHistory/{docId} {
+      allow read:   if isAuth();
+      allow create: if isAuth();
+      allow delete: if isAuth();
+    }
+
+    match /plateDetections/{docId} {
+      allow read:   if isAuth();
+      allow create: if true;   // Trusted local camera device
+      allow delete: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,144 @@
+/* Personalización del fondo y colores principales */
+.custom-bg {
+    background-color: #1E2A39; /* Fondo oscuro, para dar un tono moderno */
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #E8491D, #F8A71C); /* Un degradado moderno de colores cálidos */
+    padding: 120px 0; /* Asegura que el encabezado tenga una altura adecuada */
+    background-size: cover;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3); /* Mejora la legibilidad del texto sobre el fondo */
+}
+
+/* Navbar personalizada con espaciado reducido */
+.navbar {
+    background-color: #ff6600 !important;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease; /* Añade transición suave al pasar el mouse */
+}
+
+.navbar .navbar-brand img {
+    height: 40px;
+}
+
+.navbar-nav .nav-item .nav-link {
+    color: #ffffff;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 8px 15px; /* Mejora la interacción */
+    transition: color 0.3s ease, background-color 0.3s ease; /* Transición suave para los enlaces */
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: #F8A71C;
+    background-color: #2C3E50; /* Fondo oscuro sutil en el hover */
+}
+
+/* Tabla de Placas */
+table.dataTable {
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+table.dataTable th, table.dataTable td {
+    padding: 12px 20px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+table.dataTable th {
+    background-color: #F8A71C;
+    color: #1E2A39;
+    text-transform: uppercase;
+}
+
+table.dataTable tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table.dataTable tbody tr:hover {
+    background-color: #ddd;
+}
+
+/* Hero Section */
+.hero-section h1 {
+    font-size: 3.5rem;
+    color: white;
+}
+
+.hero-section p {
+    font-size: 1.25rem;
+    color: white;
+}
+
+/* Estilo para el footer */
+.footer {
+    background-color: #1E2A39;
+    color: #ffffff;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: auto; /* Asegura que el footer siempre se mantenga al final */
+}
+
+.footer p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    opacity: 0.7; /* Hacer que el texto sea un poco más sutil */
+}
+
+/* Responsividad para dispositivos móviles */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 100px 0;
+    }
+    h2 {
+        font-size: 1.25rem;
+    }
+    .navbar-nav .nav-link {
+        font-size: 0.9rem;
+        padding: 6px 10px;
+    }
+}
+
+/* Mejora la apariencia de los botones */
+.btn {
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background-color: #F8A71C;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #E8491D;
+}
+
+/* Transición suave para los botones */
+.btn:hover {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    transform: translateY(-2px);
+}
+
+/* Estilo del botón de Excel y PDF */
+button.dt-button.buttons-excel,
+button.dt-button.buttons-pdf {
+    display: none !important;
+}
+
+/* Asegura que el footer esté al final de la página */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+

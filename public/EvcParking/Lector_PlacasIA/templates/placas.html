@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EVC Parking — Registros de Placas</title>
+  <link rel="icon" href="{{ url_for('static', filename='Img/evcblanco.png') }}" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='evc-local.css') }}">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <img src="{{ url_for('static', filename='Img/evcblanco.png') }}" alt="EVC Parking">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link" href="/"><i class="fa-solid fa-camera me-1"></i>Cámara</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/placas"><i class="fa-solid fa-list me-1"></i>Registros</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero-section hero-sm">
+    <div class="container">
+      <h1><i class="fa-solid fa-list me-2"></i>Registros de Placas</h1>
+      <p>Historial completo de placas detectadas en tiempo real desde Firebase.</p>
+    </div>
+  </header>
+
+  <main class="container py-4">
+    <div class="card">
+      <div class="card-header cam-header d-flex align-items-center justify-content-between">
+        <span><i class="fa-solid fa-database me-2"></i>Detecciones en Firestore</span>
+        <span class="cam-live-badge"><i class="fa-solid fa-circle me-1"></i>Live</span>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table cam-table mb-0" id="placasTable">
+            <thead>
+              <tr>
+                <th>Placa</th>
+                <th>Confianza</th>
+                <th>Tipo de Vehículo</th>
+                <th>Región</th>
+                <th>Fecha y Hora</th>
+              </tr>
+            </thead>
+            <tbody id="placasBody">
+              <tr id="emptyRow">
+                <td colspan="5" class="text-center text-muted py-5">
+                  <i class="fa-solid fa-clock-rotate-left me-2"></i>Cargando detecciones...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p><i class="fa-regular fa-copyright me-1"></i>2024 EVC Parking — Servidor local</p>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey:            "AIzaSyD5oOWKwiuvlnhGSPm4pXmcHPZKNqQfVEU",
+      authDomain:        "evc-parking.firebaseapp.com",
+      projectId:         "evc-parking",
+      storageBucket:     "evc-parking.firebasestorage.app",
+      messagingSenderId: "989995637427",
+      appId:             "1:989995637427:web:9cfa55a507d4ded9046ec6"
+    });
+    const db = firebase.firestore();
+
+    db.collection('plateDetections')
+      .orderBy('timestamp', 'desc')
+      .limit(100)
+      .onSnapshot(snap => {
+        const tbody = document.getElementById('placasBody');
+        if (snap.empty) {
+          document.getElementById('emptyRow').innerHTML = '<td colspan="5" class="text-center text-muted py-5">No hay detecciones registradas.</td>';
+          return;
+        }
+        document.getElementById('emptyRow').style.display = 'none';
+
+        tbody.innerHTML = snap.docs.map(doc => {
+          const d  = doc.data();
+          const ts = d.timestamp?.toDate();
+          const dateStr = ts
+            ? ts.toLocaleDateString('es-CO') + ' ' + ts.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+            : '—';
+          const c   = d.confidence || 0;
+          const cls = c >= 85 ? 'high' : c >= 65 ? 'medium' : 'low';
+
+          return `<tr>
+            <td><span class="cam-plate-cell">${d.plate || '—'}</span></td>
+            <td><span class="cam-confidence ${cls}">${c}%</span></td>
+            <td style="font-size:.85rem;">${d.vehicleType || '—'}</td>
+            <td style="font-size:.85rem;">${(d.region || '—').toUpperCase()}</td>
+            <td style="font-size:.82rem;color:#718096;">${dateStr}</td>
+          </tr>`;
+        }).join('');
+      });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

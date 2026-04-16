@@ -1,0 +1,165 @@
+/* ── Parking lot container ───────────────────────────────── */
+.parking-lot-wrap {
+  background: #1c1f26;
+  border-radius: 14px;
+  padding: 20px 16px;
+  position: relative;
+}
+
+.lot-row-label {
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.38);
+  margin-bottom: 8px;
+  padding-left: 2px;
+}
+
+/* Lane divider between rows */
+.lot-lane {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,.15);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.lot-lane::before,
+.lot-lane::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  border-top: 2px dashed rgba(255,255,255,.1);
+  margin: 0 10px;
+}
+
+/* ── Individual parking spot ─────────────────────────────── */
+.parking-spot {
+  background: #252830;
+  border: 2px dashed #3a3f4b;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all .22s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 130px;
+  padding: 8px 6px;
+  user-select: none;
+  gap: 4px;
+}
+
+.parking-spot:hover {
+  border-color: #F8A71C;
+  border-style: solid;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(248,167,28,.25), inset 0 0 0 1px rgba(248,167,28,.1);
+}
+
+/* Occupied → red, no pointer */
+.parking-spot.bg-danger {
+  background: #2a1a1a !important;
+  border-color: #7a2020;
+  border-style: solid;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: inset 0 0 16px rgba(220,53,69,.12);
+}
+
+.parking-spot.bg-danger:hover {
+  border-color: #7a2020;
+  box-shadow: inset 0 0 16px rgba(220,53,69,.12);
+  transform: none;
+}
+
+/* ── Top-down car SVG inside spot ────────────────────────── */
+.spot-car-svg {
+  width: 42px;
+  height: auto;
+  transition: transform .3s ease, filter .3s ease;
+}
+
+.parking-spot:not(.bg-danger) .spot-car-svg {
+  filter: drop-shadow(0 1px 3px rgba(255,255,255,.05));
+}
+
+.parking-spot.bg-danger .spot-car-svg {
+  filter: drop-shadow(0 3px 8px rgba(220,53,69,.45));
+  animation: carPark .4s cubic-bezier(.34,1.56,.64,1);
+}
+
+@keyframes carPark {
+  from { transform: scale(.8); opacity: .4; }
+  to   { transform: scale(1);  opacity: 1;  }
+}
+
+/* ── Labels ──────────────────────────────────────────────── */
+.spot-label {
+  font-size: .82rem;
+  font-weight: 800;
+  letter-spacing: .5px;
+  color: rgba(255,255,255,.55);
+  line-height: 1;
+}
+
+.parking-spot.bg-danger .spot-label { color: rgba(255,255,255,.7); }
+
+.spot-status {
+  font-size: .68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  padding: .2rem .55rem;
+  border-radius: 50px;
+}
+
+.spot-status-libre    { background: rgba(40,167,69,.2);  color: #5cb85c; }
+.spot-status-ocupado  { background: rgba(220,53,69,.2);  color: #e07b7b; }
+
+/* ── Custom submit button ────────────────────────────────── */
+.custom-btn {
+  background: linear-gradient(135deg, #E8491D, #F8A71C);
+  border: none;
+  color: white;
+  font-weight: 700;
+  border-radius: 50px;
+  padding: .6rem 1.5rem;
+  box-shadow: 0 3px 12px rgba(232,73,29,.3);
+  transition: opacity .2s, transform .2s, box-shadow .2s;
+}
+
+.custom-btn:hover {
+  opacity: .93;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 16px rgba(232,73,29,.42);
+  color: white;
+}
+
+/* ── Legend badges ───────────────────────────────────────── */
+.lot-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: .78rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.55);
+  margin-bottom: 12px;
+}
+
+.lot-legend span { display: flex; align-items: center; gap: .35rem; }
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.legend-dot-free     { background: #3a3f4b; border: 1.5px dashed #6c757d; }
+.legend-dot-occupied { background: #7a2020; }
