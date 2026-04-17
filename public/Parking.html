@@ -65,6 +65,46 @@
     </div>
 
     <div class="row justify-content-center g-3" id="spacesContainer"></div>
+
+    <div class="row justify-content-center g-3 mt-4">
+  <div class="col-12 col-lg-5">
+    <div class="card sensor-card">
+      <div class="card-header">
+        <i class="fa-solid fa-right-to-bracket me-2"></i>Barrera de Entrada
+      </div>
+      <div class="card-body text-center">
+        <p class="text-muted mb-3">Prueba manual del servo de entrada</p>
+        <button class="reserve-btn mb-2"
+          onclick="window._parkingMgr.abrirEntrada()">
+          <i class="fa-solid fa-arrow-up me-1"></i>Abrir entrada
+        </button>
+        <button class="btn btn-outline-secondary w-100"
+          onclick="window._parkingMgr.cerrarEntrada()">
+          <i class="fa-solid fa-arrow-down me-1"></i>Cerrar entrada
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-5">
+    <div class="card sensor-card">
+      <div class="card-header">
+        <i class="fa-solid fa-right-from-bracket me-2"></i>Barrera de Salida
+      </div>
+      <div class="card-body text-center">
+        <p class="text-muted mb-3">Prueba manual del servo de salida</p>
+        <button class="reserve-btn mb-2"
+          onclick="window._parkingMgr.abrirSalida()">
+          <i class="fa-solid fa-arrow-up me-1"></i>Abrir salida
+        </button>
+        <button class="btn btn-outline-secondary w-100"
+          onclick="window._parkingMgr.cerrarSalida()">
+          <i class="fa-solid fa-arrow-down me-1"></i>Cerrar salida
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
   </main>
 
   <div class="modal fade" id="accessDeniedModal" tabindex="-1" aria-hidden="true">
