@@ -14,6 +14,7 @@ class ParkingManager {
     this.#listenReservations();
     this.#listenParkingStates();
     this.#bindModalEvents();
+    this.#checkAdminControls();
     window._parkingMgr = this;
   }
 
@@ -404,6 +405,19 @@ class ParkingManager {
     btn.disabled = false;
     btn.textContent = 'Pagar';
     this.#goToStep(4);
+  }
+
+  // ── Admin-only UI ─────────────────────────────────────────────
+
+  #checkAdminControls() {
+    auth.onAuthStateChanged(async user => {
+      if (!user) return;
+      const snap = await db.collection('users').doc(user.uid).get();
+      if (snap.data()?.role === 'admin') {
+        const el = document.getElementById('servoControls');
+        if (el) el.style.display = '';
+      }
+    });
   }
 
   // ── Servo controls ────────────────────────────────────────────
