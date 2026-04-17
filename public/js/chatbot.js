@@ -17,21 +17,21 @@ SOBRE EVC PARKING:
 - Barreras de acceso controladas por servomotores
 
 PÁGINAS DEL SISTEMA:
-- Parking.html: estado en tiempo real de los 4 sensores IoT
-- Reserva.html: reservar un puesto (A1–A4, B1–B4)
-- Registros.html: vehículos actualmente estacionados
-- historial.html: historial completo de reservas, exportable a Excel/PDF
-- Estadisticas.html: gráfico de ocupación en tiempo real
-- Admin.html y GestionPuestos.html: solo para administradores
+- Parking: estado en tiempo real de los 4 sensores IoT
+- Reserva: reservar un puesto (A1–A4, B1–B4)
+- Registros: vehículos actualmente estacionados
+- Historial: historial completo de reservas, exportable a Excel/PDF
+- Estadísticas: gráfico de ocupación en tiempo real
+- Admin y Gestión de Puestos: solo para administradores
 
 CÓMO RESERVAR:
-1. Ir a "Reservar Espacio"
+1. Ir a la sección "Reserva"
 2. Ingresar número de documento, nombre y placa del vehículo
 3. Seleccionar un puesto disponible en el mapa (verde = libre, rojo = ocupado)
 4. Confirmar la reserva
 
 CÓMO CANCELAR:
-1. Ir a "Estado Parking"
+1. Ir a la sección "Parking"
 2. En el espacio reservado aparece el botón "Cancelar reserva"
 
 ROLES:

@@ -42,93 +42,268 @@
   <header class="hero-section hero-sm">
     <div class="container">
       <h1><i class="fa-solid fa-calendar-plus me-2"></i>Reservar Espacio</h1>
-      <p>Registra tu vehículo y elige tu puesto de estacionamiento.</p>
+      <p>Selecciona un puesto disponible en el mapa para iniciar tu reserva.</p>
     </div>
   </header>
 
   <main class="container py-4">
-    <div class="row g-4">
 
-      <div class="col-lg-5">
-        <div class="card h-100">
-          <div class="card-header" style="background:linear-gradient(135deg,#E8491D,#F8A71C);color:white;">
-            <i class="fa-solid fa-user-pen me-2"></i>Datos del Vehículo
-          </div>
-          <div class="card-body p-4">
-            <form id="registrationForm">
-              <div class="mb-3">
-                <label class="form-label" for="documentNumber">
-                  <i class="fa-solid fa-id-card me-1" style="color:#F8A71C;"></i>Número de Identificación
-                </label>
-                <input type="text" class="form-control" id="documentNumber" placeholder="Ej: 1234567890">
-                <small id="documentNumberError" class="text-danger"></small>
-              </div>
-              <div class="mb-3">
-                <label class="form-label" for="userName">
-                  <i class="fa-solid fa-user me-1" style="color:#F8A71C;"></i>Nombre Completo
-                </label>
-                <input type="text" class="form-control" id="userName" placeholder="Ej: Juan García">
-                <small id="userNameError" class="text-danger"></small>
-              </div>
-              <div class="mb-3">
-                <label class="form-label" for="plateNumber">
-                  <i class="fa-solid fa-car me-1" style="color:#F8A71C;"></i>Placa del Vehículo
-                </label>
-                <input type="text" class="form-control" id="plateNumber" placeholder="Ej: ABC123">
-                <small id="plateNumberError" class="text-danger"></small>
-              </div>
-              <button type="submit" class="btn custom-btn w-100 mt-2">
-                <i class="fa-solid fa-check me-2"></i>Registrar
-              </button>
-            </form>
-          </div>
+    <!-- Availability bar -->
+    <div class="av-card mb-4">
+      <div class="av-left">
+        <i class="fa-solid fa-circle-check text-success me-2"></i>
+        <span id="availabilityCounter">Cargando disponibilidad...</span>
+      </div>
+      <div class="av-bar-wrap">
+        <div class="av-bar-track">
+          <div id="availabilityBar" class="av-bar-fill"></div>
         </div>
       </div>
+    </div>
 
-      <div class="col-lg-7">
-        <div class="card h-100">
-          <div class="card-header" style="background:linear-gradient(135deg,#E8491D,#F8A71C);color:white;">
-            <i class="fa-solid fa-map me-2"></i>Selecciona tu Puesto
+    <!-- Parking map -->
+    <div class="card">
+      <div class="card-header" style="background:linear-gradient(135deg,#E8491D,#F8A71C);color:#fff;">
+        <i class="fa-solid fa-map me-2"></i>Mapa del Estacionamiento
+        <span class="float-end" style="font-size:.8rem;opacity:.85;">Haz clic en un puesto libre para reservar</span>
+      </div>
+      <div class="card-body p-3">
+        <div class="parking-lot-wrap">
+          <div class="lot-legend">
+            <span><span class="legend-dot legend-dot-free"></span> Libre</span>
+            <span><span class="legend-dot legend-dot-occupied"></span> Ocupado</span>
           </div>
-          <div class="card-body p-3">
-            <p class="text-muted mb-3" style="font-size:.83rem;">
-              <i class="fa-solid fa-circle-info me-1"></i>
-              Completa el formulario primero, luego haz clic en un espacio disponible.
-            </p>
-
-            <div class="parking-lot-wrap">
-              <div class="lot-legend">
-                <span><span class="legend-dot legend-dot-free"></span> Libre</span>
-                <span><span class="legend-dot legend-dot-occupied"></span> Ocupado</span>
-              </div>
-
-              <div id="parkingLot">
-                <div class="lot-row-label">Fila A</div>
-                <div class="row row-cols-2 row-cols-sm-4 g-2 mb-1">
-                  <div class="col"><div class="parking-spot" data-spot="A1"></div></div>
-                  <div class="col"><div class="parking-spot" data-spot="A2"></div></div>
-                  <div class="col"><div class="parking-spot" data-spot="A3"></div></div>
-                  <div class="col"><div class="parking-spot" data-spot="A4"></div></div>
-                </div>
-
-                <div class="lot-lane">Carril de circulación</div>
-
-                <div class="lot-row-label">Fila B</div>
-                <div class="row row-cols-2 row-cols-sm-4 g-2">
-                  <div class="col"><div class="parking-spot" data-spot="B1"></div></div>
-                  <div class="col"><div class="parking-spot" data-spot="B2"></div></div>
-                  <div class="col"><div class="parking-spot" data-spot="B3"></div></div>
-                  <div class="col"><div class="parking-spot" data-spot="B4"></div></div>
-                </div>
-              </div>
+          <div id="parkingLot">
+            <div class="lot-row-label">Fila A</div>
+            <div class="row row-cols-2 row-cols-sm-4 g-2 mb-1">
+              <div class="col"><div class="parking-spot" data-spot="A1"></div></div>
+              <div class="col"><div class="parking-spot" data-spot="A2"></div></div>
+              <div class="col"><div class="parking-spot" data-spot="A3"></div></div>
+              <div class="col"><div class="parking-spot" data-spot="A4"></div></div>
+            </div>
+            <div class="lot-lane">Carril de circulación</div>
+            <div class="lot-row-label">Fila B</div>
+            <div class="row row-cols-2 row-cols-sm-4 g-2">
+              <div class="col"><div class="parking-spot" data-spot="B1"></div></div>
+              <div class="col"><div class="parking-spot" data-spot="B2"></div></div>
+              <div class="col"><div class="parking-spot" data-spot="B3"></div></div>
+              <div class="col"><div class="parking-spot" data-spot="B4"></div></div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
+
   </main>
 
+  <!-- ═══════════════════════════════════════════
+       BOOKING MODAL — 4 steps
+  ══════════════════════════════════════════════ -->
+  <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content booking-modal-content">
+
+        <!-- Header -->
+        <div class="booking-modal-header">
+          <div>
+            <h5 class="mb-0 fw-bold text-white"><i class="fa-solid fa-calendar-plus me-2"></i>Nueva Reserva</h5>
+            <span class="badge-spot" id="modalSpotBadge">Puesto —</span>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- Steps indicator -->
+        <div class="steps-bar">
+          <div class="step-dot active" data-step="1"><span>1</span><label>Vehículo</label></div>
+          <div class="step-line-seg"></div>
+          <div class="step-dot" data-step="2"><span>2</span><label>Duración</label></div>
+          <div class="step-line-seg"></div>
+          <div class="step-dot" data-step="3"><span>3</span><label>Pago</label></div>
+          <div class="step-line-seg"></div>
+          <div class="step-dot" data-step="4"><span>4</span><label>Confirmación</label></div>
+        </div>
+
+        <div class="modal-body p-4">
+
+          <!-- ── STEP 1: Vehicle data ── -->
+          <div class="booking-step-panel active" data-step="1">
+            <h6 class="step-title"><i class="fa-solid fa-user-pen me-2" style="color:#F8A71C;"></i>Datos del Vehículo</h6>
+            <form id="bookingForm" autocomplete="off">
+              <div class="mb-3">
+                <label class="form-label">Número de Identificación</label>
+                <input type="text" class="form-control" id="documentNumber" placeholder="Ej: 1234567890">
+                <small id="documentNumberError" class="text-danger"></small>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Nombre Completo</label>
+                <input type="text" class="form-control" id="userName" placeholder="Ej: Juan García">
+                <small id="userNameError" class="text-danger"></small>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Placa del Vehículo</label>
+                <input type="text" class="form-control text-uppercase" id="plateNumber" placeholder="Ej: ABC123" maxlength="7">
+                <small id="plateNumberError" class="text-danger"></small>
+              </div>
+            </form>
+            <div class="d-flex justify-content-end mt-3">
+              <button class="btn btn-booking-primary" id="btnStep1Next">
+                Continuar <i class="fa-solid fa-arrow-right ms-2"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- ── STEP 2: Duration & price ── -->
+          <div class="booking-step-panel" data-step="2">
+            <h6 class="step-title"><i class="fa-solid fa-clock me-2" style="color:#F8A71C;"></i>Duración y Precio</h6>
+
+            <div class="info-row mb-3">
+              <span><i class="fa-solid fa-map-pin me-1"></i>Puesto seleccionado:</span>
+              <strong id="selectedSpotLabel">—</strong>
+            </div>
+
+            <label class="form-label fw-semibold mb-2">¿Cuánto tiempo necesitas?</label>
+            <div class="duration-grid mb-4">
+              <button class="duration-btn active" data-hours="1">1 hora</button>
+              <button class="duration-btn" data-hours="2">2 horas</button>
+              <button class="duration-btn" data-hours="4">4 horas</button>
+              <button class="duration-btn" data-hours="8">8 horas</button>
+              <button class="duration-btn" data-hours="24">24 horas</button>
+            </div>
+
+            <div class="price-card">
+              <div class="price-row">
+                <span><i class="fa-solid fa-clock me-1"></i>Entrada estimada</span>
+                <strong id="entryTime">—</strong>
+              </div>
+              <div class="price-row">
+                <span><i class="fa-solid fa-flag-checkered me-1"></i>Salida estimada</span>
+                <strong id="exitTime">—</strong>
+              </div>
+              <div class="price-divider"></div>
+              <div class="price-row price-total-row">
+                <span>Total a pagar</span>
+                <strong id="pricePreview" class="price-big">—</strong>
+              </div>
+              <p class="price-note">Tarifa: $5,000 COP/hora · IVA incluido</p>
+            </div>
+
+            <div class="d-flex justify-content-between mt-3">
+              <button class="btn btn-booking-ghost" id="btnStep2Back">
+                <i class="fa-solid fa-arrow-left me-2"></i>Volver
+              </button>
+              <button class="btn btn-booking-primary" id="btnStep2Next">
+                Ir a Pago <i class="fa-solid fa-arrow-right ms-2"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- ── STEP 3: Payment ── -->
+          <div class="booking-step-panel" data-step="3">
+            <h6 class="step-title"><i class="fa-solid fa-credit-card me-2" style="color:#F8A71C;"></i>Información de Pago</h6>
+
+            <!-- Card visual -->
+            <div class="card-visual mb-4">
+              <div class="cv-top">
+                <div class="cv-chip"></div>
+                <div id="cardTypeIcon" class="cv-brand"><i class="fa-solid fa-credit-card"></i></div>
+              </div>
+              <div id="cardVisualNumber" class="cv-number">•••• •••• •••• ••••</div>
+              <div class="cv-bottom">
+                <div>
+                  <div class="cv-label">TITULAR</div>
+                  <div id="cardVisualName" class="cv-value">NOMBRE APELLIDO</div>
+                </div>
+                <div>
+                  <div class="cv-label">VENCE</div>
+                  <div id="cardVisualExpiry" class="cv-value">MM/AA</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card form -->
+            <form id="cardForm" autocomplete="off">
+              <div class="mb-3">
+                <label class="form-label">Número de tarjeta</label>
+                <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric">
+                <small id="cardNumberError" class="text-danger"></small>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Nombre en la tarjeta</label>
+                <input type="text" class="form-control text-uppercase" id="cardName" placeholder="JUAN GARCIA">
+                <small id="cardNameError" class="text-danger"></small>
+              </div>
+              <div class="row g-3 mb-3">
+                <div class="col-6">
+                  <label class="form-label">Vencimiento</label>
+                  <input type="text" class="form-control" id="cardExpiry" placeholder="MM/AA" maxlength="5" inputmode="numeric">
+                  <small id="cardExpiryError" class="text-danger"></small>
+                </div>
+                <div class="col-6">
+                  <label class="form-label">CVV</label>
+                  <input type="password" class="form-control" id="cardCvv" placeholder="•••" maxlength="4" inputmode="numeric">
+                  <small id="cardCvvError" class="text-danger"></small>
+                </div>
+              </div>
+            </form>
+
+            <!-- Payment summary -->
+            <div class="pay-summary">
+              <div class="pay-row"><span>Puesto</span><strong id="paySpot">—</strong></div>
+              <div class="pay-row"><span>Placa</span><strong id="payPlate">—</strong></div>
+              <div class="pay-row"><span>Duración</span><strong id="payDuration">—</strong></div>
+              <div class="pay-row pay-row-total"><span>Total</span><strong id="payTotal">—</strong></div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-3 gap-2">
+              <button class="btn btn-booking-ghost" id="btnStep3Back">
+                <i class="fa-solid fa-arrow-left me-2"></i>Volver
+              </button>
+              <button class="btn btn-booking-pay w-100" id="btnPay">
+                <i class="fa-solid fa-lock me-2"></i>Pagar
+              </button>
+            </div>
+            <p class="text-center mt-2" style="font-size:.72rem;color:#aaa;">
+              <i class="fa-solid fa-shield-halved me-1"></i>Pago seguro simulado · Datos de prueba
+            </p>
+          </div>
+
+          <!-- ── STEP 4: Confirmation ── -->
+          <div class="booking-step-panel" data-step="4">
+            <div class="conf-success">
+              <div class="conf-icon"><i class="fa-solid fa-circle-check"></i></div>
+              <h5 class="conf-title">¡Reserva Confirmada!</h5>
+              <p class="conf-sub">Tu puesto ha sido reservado exitosamente.</p>
+            </div>
+
+            <div class="conf-card">
+              <div class="conf-ref">
+                <span>Referencia</span>
+                <strong id="confReference" class="conf-ref-num">—</strong>
+              </div>
+              <div class="conf-divider"></div>
+              <div class="conf-row"><span><i class="fa-solid fa-map-pin me-1"></i>Puesto</span><strong id="confSpot">—</strong></div>
+              <div class="conf-row"><span><i class="fa-solid fa-user me-1"></i>Titular</span><strong id="confName">—</strong></div>
+              <div class="conf-row"><span><i class="fa-solid fa-car me-1"></i>Placa</span><strong id="confPlate">—</strong></div>
+              <div class="conf-row"><span><i class="fa-solid fa-clock me-1"></i>Entrada</span><strong id="confEntry">—</strong></div>
+              <div class="conf-row"><span><i class="fa-solid fa-flag-checkered me-1"></i>Salida estimada</span><strong id="confExit">—</strong></div>
+              <div class="conf-row"><span><i class="fa-solid fa-hourglass me-1"></i>Duración</span><strong id="confDuration">—</strong></div>
+              <div class="conf-divider"></div>
+              <div class="conf-row conf-row-total"><span>Total pagado</span><strong id="confAmount">—</strong></div>
+            </div>
+
+            <div class="d-flex justify-content-center mt-4">
+              <button class="btn btn-booking-primary" data-bs-dismiss="modal">
+                <i class="fa-solid fa-check me-2"></i>Listo
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Access denied modal -->
   <div class="modal fade" id="accessDeniedModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -139,40 +314,6 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" id="redirectLoginBtn">
             <i class="fa-solid fa-right-to-bracket me-1"></i>Ir al Login
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"><i class="fa-solid fa-circle-check me-2"></i>Datos registrados</h5>
-        </div>
-        <div class="modal-body"><p>Los datos se guardaron. Ahora selecciona un puesto disponible.</p></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="parkingSpotInfoModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"><i class="fa-solid fa-calendar-check me-2"></i>Confirmar Reserva</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body"><p>¿Deseas reservar este puesto?</p></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            <i class="fa-solid fa-xmark me-1"></i>Cancelar
-          </button>
-          <button type="button" class="btn btn-primary" id="confirmReservation">
-            <i class="fa-solid fa-check me-1"></i>Confirmar
           </button>
         </div>
       </div>
