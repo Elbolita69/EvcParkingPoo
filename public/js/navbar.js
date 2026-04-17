@@ -5,8 +5,8 @@ class NavbarManager {
                 db.collection('users').doc(user.uid).get().then(snap => {
                     const data = snap.data() || {};
                     this.#updateLoginBtn(true);
-                    this.#updateGreeting(data.nombre || '');
-                    if (data.role === 'admin') this.#addAdminItems();
+                    this.#showGreeting(data.nombre || '');
+                    if (data.role === 'admin') this.#addAdminDropdown();
                 });
             } else {
                 this.#updateLoginBtn(false);
@@ -27,9 +27,11 @@ class NavbarManager {
         }
     }
 
-    #updateGreeting(nombre) {
+    #showGreeting(nombre) {
         const el = document.getElementById('nombreUsuario');
-        if (el && nombre) el.textContent = `Hola, ${nombre}!`;
+        if (!el || !nombre) return;
+        el.textContent = `Hola, ${nombre}!`;
+        el.classList.add('visible');
     }
 
     #logout() {
@@ -44,31 +46,36 @@ class NavbarManager {
         });
     }
 
-    #addAdminItems() {
+    #addAdminDropdown() {
         const nav = document.querySelector('#navbarNav .navbar-nav');
-        if (!nav) return;
+        if (!nav || nav.querySelector('#adminDropdown')) return;
 
-        const items = [
-            { href: 'Admin.html',          text: 'Admin',   icon: 'fa-solid fa-shield-halved' },
-            { href: 'Estadisticas.html',   text: 'Gráficas',icon: 'fa-solid fa-chart-pie' },
-            { href: 'GestionPuestos.html', text: 'Puestos', icon: 'fa-solid fa-map-pin' },
-            { href: 'Cameras.html', text: 'Cámaras', icon: 'fa-solid fa-camera' }
-        ];
+        const page    = window.location.pathname.split('/').pop();
+        const onAdmin = ['Admin.html','Estadisticas.html','GestionPuestos.html','Cameras.html'].includes(page);
 
-        const anchor = nav.querySelector("a[href='Parking.html']")?.parentElement
-                    ?? nav.querySelector("a[href='./Parking.html']")?.parentElement;
+        const li = document.createElement('li');
+        li.className = 'nav-item dropdown';
+        li.innerHTML = `
+          <a class="nav-link dropdown-toggle${onAdmin ? ' active' : ''}" href="#"
+             id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-shield-halved me-1"></i>Admin
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+            <li><a class="dropdown-item${page==='Admin.html'?' active':''}" href="Admin.html">
+              <i class="fa-solid fa-users-gear me-2"></i>Usuarios</a></li>
+            <li><a class="dropdown-item${page==='GestionPuestos.html'?' active':''}" href="GestionPuestos.html">
+              <i class="fa-solid fa-map-pin me-2"></i>Puestos</a></li>
+            <li><a class="dropdown-item${page==='Estadisticas.html'?' active':''}" href="Estadisticas.html">
+              <i class="fa-solid fa-chart-pie me-2"></i>Estadísticas</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item${page==='Cameras.html'?' active':''}" href="Cameras.html">
+              <i class="fa-solid fa-camera me-2"></i>Cámaras</a></li>
+          </ul>`;
 
-        items.forEach(item => {
-            const li = document.createElement('li');
-            li.className = 'nav-item';
-            li.innerHTML = `<a class="nav-link" href="${item.href}"><i class="${item.icon} me-1"></i>${item.text}</a>`;
-            if (anchor) anchor.insertAdjacentElement('afterend', li);
-            else nav.appendChild(li);
-        });
-
-        const faqEl = nav.querySelector("a[href='Faq.html']")
-                   ?? nav.querySelector("a[href='./Faq.html']");
-        if (faqEl) faqEl.parentElement.remove();
+        const dividerLi = nav.querySelector('.nav-divider')?.closest('li')
+                       ?? nav.querySelector('#loginBtn')?.closest('li');
+        if (dividerLi) dividerLi.insertAdjacentElement('beforebegin', li);
+        else nav.appendChild(li);
     }
 }
 
