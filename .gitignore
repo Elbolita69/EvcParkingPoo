@@ -83,3 +83,4 @@ Thumbs.db
 # Claude Code
 .agents/
 .claude/
+CLAUDE.md
