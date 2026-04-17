@@ -49,7 +49,7 @@ EVC Parking es una plataforma de estacionamiento automatizada que integra tres c
 | DataTables 1.13.6 | Tablas con búsqueda, paginación y exportación |
 | XLSX.js | Exportar a Excel |
 | html2pdf.js | Exportar a PDF |
-| Voiceflow | Widget de chatbot |
+| Groq API (llama-3.3-70b) | Chatbot IA integrado (oculto del repo) |
 
 ### Hardware / IoT
 | Tecnología | Uso |
@@ -110,7 +110,7 @@ EvcParking/
 │   │   ├── user-admin.js            # Gestión de usuarios (admin)
 │   │   ├── history.js               # Historial con DataTables
 │   │   ├── stats.js                 # Gráfico de ocupación con Chart.js
-│   │   └── chatbot.js               # Widget de Voiceflow
+│   │   └── chatbot.js               # Chatbot IA con Groq (no está en el repo)
 │   │
 │   ├── img/                         # Imágenes del sitio
 │   │   ├── evclogo.png
@@ -388,6 +388,7 @@ Respuestas a las preguntas más comunes sobre el sistema, más un formulario de 
 ### Qué está protegido
 
 - `public/js/app-config.js` — ignorado por `.gitignore`, nunca se sube a GitHub
+- `public/js/chatbot.js` — ignorado por `.gitignore`, contiene la lógica IA del chatbot (API key de Groq)
 - Credenciales de Firebase — solo en `app-config.js`
 
 ### Headers HTTP (Firebase Hosting)
@@ -419,6 +420,28 @@ Las reglas en `firestore.rules` aplican la siguiente política:
 | `reservationHistory` | Autenticado | Autenticado | — | Autenticado |
 
 > Las reservas (`reservations` e `iotReservations`) son públicas para lectura para que el mapa de parking sea visible sin necesidad de login.
+
+---
+
+## Cambios recientes
+
+### Chatbot IA (Groq)
+El chatbot fue migrado de Voiceflow a una solución propia con **Groq API** (`llama-3.3-70b-versatile`). El widget es completamente personalizado (ES6 class, sin dependencias externas) e incluye:
+- Contexto en tiempo real del estado del parking vía Firestore
+- Respuestas rápidas predefinidas
+- Historial de conversación por sesión
+
+> `public/js/chatbot.js` está excluido del repositorio por seguridad (contiene la API key de Groq).
+
+### Flujo de reserva mejorado
+El proceso de reserva fue movido a la página **Parking**, usando un modal de 4 pasos:
+1. Datos personales (documento, nombre, placa)
+2. Selección del puesto en el mapa
+3. Resumen de la reserva
+4. Confirmación / pago simulado
+
+### Controles de barreras (admin)
+Los botones de apertura/cierre de barreras de acceso ahora son **visibles únicamente para administradores**. Los usuarios regulares no ven ni pueden interactuar con estos controles.
 
 ---
 

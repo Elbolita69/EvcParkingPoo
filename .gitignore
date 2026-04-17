@@ -71,6 +71,7 @@ node_modules/
 # Archivos de configuracion sensibles
 public/js/app-config.js
 public/js/firebase-config.js
+public/js/chatbot.js
 
 # Sistema operativo
 .DS_Store
