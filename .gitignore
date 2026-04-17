@@ -79,3 +79,7 @@ Thumbs.db
 # Editores
 .vscode/
 .idea/
+
+# Claude Code
+.agents/
+.claude/

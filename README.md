@@ -2,6 +2,7 @@
 
 Sistema inteligente de gestión de estacionamiento que combina sensores IoT (ESP32), reconocimiento de placas con IA (OpenCV + PlateRecognizer), y una interfaz web en tiempo real respaldada por Firebase.
 
+
 ---
 
 ## Tabla de contenidos
@@ -27,7 +28,7 @@ Sistema inteligente de gestión de estacionamiento que combina sensores IoT (ESP
 EVC Parking es una plataforma de estacionamiento automatizada que integra tres componentes principales:
 
 - **Interfaz web** — permite ver disponibilidad en tiempo real, hacer reservas, ver historial, exportar reportes y administrar usuarios desde cualquier dispositivo.
-- **Hardware IoT** — un microcontrolador ESP32 con sensores ultrasónicos detecta si cada espacio está ocupado o libre, y servomotores controlan las barreras de acceso. La comunicación se realiza a través de la plataforma Blynk IoT.
+- **Hardware IoT** — un microcontrolador ESP32 con sensores ultrasónicos detecta si cada espacio está ocupado o libre, y servomotores controlan las barreras de acceso. La comunicación se realiza a través de una plataforma IoT cloud (configurable).
 - **Lector de placas con IA** — un script Python con OpenCV y la API de PlateRecognizer captura y reconoce las matrículas de los vehículos en la entrada/salida.
 
 ---
@@ -56,7 +57,7 @@ EVC Parking es una plataforma de estacionamiento automatizada que integra tres c
 | ESP32 | Microcontrolador principal |
 | Sensores ultrasónicos HC-SR04 | Detección de vehículos en cada espacio |
 | Servomotores SG90 | Control de barreras de acceso |
-| Blynk IoT | Plataforma de comunicación cloud para el ESP32 |
+| Plataforma IoT cloud | Comunicación entre ESP32 y la web (por definir) |
 
 ### Inteligencia Artificial
 | Tecnología | Uso |
@@ -84,7 +85,7 @@ EvcParking/
 │   ├── GestionPuestos.html          # Gestión de vehículos y usuarios (solo admin)
 │   ├── Estadisticas.html            # Gráfico de ocupación
 │   ├── Faq.html                     # Preguntas frecuentes + formulario de contacto
-│   ├── historialblynk.html          # Historial completo de reservas + exportar
+│   ├── historial.html               # Historial completo de reservas + exportar
 │   │
 │   ├── css/                         # Estilos por página
 │   │   ├── main.css                 # Estilos globales (navbar, hero, footer, cards)
@@ -102,7 +103,7 @@ EvcParking/
 │   │   ├── auth.js                  # Firebase Auth — login y registro
 │   │   ├── navbar.js                # Navbar dinámica según rol
 │   │   ├── guard.js                 # Protección de páginas por autenticación/rol
-│   │   ├── parking.js               # Lectura de sensores Blynk en tiempo real
+│   │   ├── parking.js               # Estado de sensores IoT en tiempo real
 │   │   ├── booking.js               # Lógica de reservas de puestos
 │   │   ├── records.js               # Tabla de registros activos
 │   │   ├── spots-admin.js           # Gestión de puestos (admin)
@@ -141,7 +142,6 @@ Asegúrate de tener instalado lo siguiente antes de empezar:
 - [Node.js](https://nodejs.org/) (versión 16 o superior)
 - [Firebase CLI](https://firebase.google.com/docs/cli): `npm install -g firebase-tools`
 - Una cuenta en [Firebase](https://firebase.google.com/) con un proyecto creado
-- Una cuenta en [Blynk IoT](https://blynk.io/) con un dispositivo configurado (para el hardware)
 - Python 3.8+ (solo para el lector de placas)
 
 ---
@@ -206,11 +206,9 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const db   = firebase.firestore();
 
-window.BLYNK_TOKEN = 'TU_TOKEN_DE_BLYNK';
 ```
 
 > Todos estos valores los obtienes de Firebase Console → Configuración del proyecto → General → Tu app web.
-> El token de Blynk lo encuentras en tu dashboard de Blynk → Device → Device Info.
 
 ---
 
@@ -233,29 +231,31 @@ El archivo `public/IoTParkingESP32/IoTParkingESP32.ino` contiene el código para
    - Archivo → Preferencias → URL adicionales: `https://dl.espressif.com/dl/package_esp32_index.json`
    - Herramientas → Placa → Gestor de tarjetas → buscar `esp32` → instalar
 
-2. Instala la librería **Blynk** desde el gestor de librerías del IDE
-
-3. Abre `IoTParkingESP32.ino` y edita las credenciales al inicio del archivo:
+2. Abre `IoTParkingESP32.ino` y edita las credenciales WiFi al inicio del archivo:
 
 ```cpp
-#define BLYNK_AUTH_TOKEN "TU_TOKEN_DE_BLYNK"
-
 char ssid[] = "NOMBRE_DE_TU_WIFI";
 char pass[] = "CONTRASEÑA_DE_TU_WIFI";
 ```
 
+3. Integra la plataforma IoT cloud elegida (ver comentarios `TODO` en el sketch)
+
 4. Conecta el ESP32 al PC, selecciona la placa y el puerto correcto, y sube el sketch
 
-### Pines usados (referencia)
+### Pines físicos usados
 
 | Pin ESP32 | Componente |
 |---|---|
-| V0 (virtual) | Sensor espacio 1 |
-| V1 (virtual) | Sensor espacio 2 |
-| V2 (virtual) | Sensor espacio 3 |
-| V3 (virtual) | Sensor espacio 4 |
+| GPIO 4 | Sensor espacio 1 |
+| GPIO 15 | Sensor espacio 2 |
+| GPIO 5 | Sensor espacio 3 |
+| GPIO 19 | Sensor espacio 4 |
+| GPIO 14 | Servo barrera entrada |
+| GPIO 27 | Servo barrera salida |
 
-> Los pines físicos exactos están definidos en el sketch `.ino`.
+### Identificadores de espacio (Firestore)
+
+Los documentos en la colección `iotReservations` usan los IDs `space0`, `space1`, `space2`, `space3`.
 
 ---
 
@@ -357,7 +357,7 @@ Página introductoria con descripción del sistema y acceso al login.
 Panel principal del usuario con accesos rápidos a todas las funciones.
 
 ### `/Parking.html` — Estado en tiempo real
-Muestra el estado de los 4 espacios monitoreados por sensores IoT (Blynk). Se actualiza cada 2 segundos. Desde aquí también se puede reservar un espacio directamente.
+Muestra el estado de los 4 espacios monitoreados por sensores IoT. Se actualiza en tiempo real vía Firestore. Desde aquí también se puede reservar un espacio directamente.
 
 ### `/Reserva.html` — Reservar espacio
 Formulario para ingresar documento, nombre y placa del vehículo, luego seleccionar uno de los 8 puestos del mapa (A1–A4, B1–B4). Los puestos ocupados se marcan en rojo.
@@ -365,7 +365,7 @@ Formulario para ingresar documento, nombre y placa del vehículo, luego seleccio
 ### `/Registros.html` — Registros activos
 Tabla con todos los vehículos actualmente estacionados. Se puede exportar a Excel o PDF.
 
-### `/historialblynk.html` — Historial
+### `/historial.html` — Historial
 Historial completo de reservas (realizadas y canceladas) con fecha, espacio, nombre, placa y estado. Se puede eliminar entradas y exportar a Excel o PDF.
 
 ### `/Estadisticas.html` — Estadísticas *(solo admin)*
@@ -388,8 +388,7 @@ Respuestas a las preguntas más comunes sobre el sistema, más un formulario de 
 ### Qué está protegido
 
 - `public/js/app-config.js` — ignorado por `.gitignore`, nunca se sube a GitHub
-- Token de Blynk — solo vive en `app-config.js` (no en el código fuente del repo)
-- Credenciales de Firebase — ídem
+- Credenciales de Firebase — solo en `app-config.js`
 
 ### Headers HTTP (Firebase Hosting)
 
@@ -416,10 +415,10 @@ Las reglas en `firestore.rules` aplican la siguiente política:
 |---|---|---|---|---|
 | `users` | Autenticado | Solo el propio usuario | Propio usuario o admin | Solo admin |
 | `reservations` | Público | Autenticado | Autenticado | Solo admin |
-| `blynkReservations` | Público | Autenticado | Autenticado | Autenticado |
+| `iotReservations` | Público | Autenticado | Autenticado | Autenticado |
 | `reservationHistory` | Autenticado | Autenticado | — | Autenticado |
 
-> Las reservas (`reservations` y `blynkReservations`) son públicas para lectura para que el mapa de parking sea visible sin necesidad de login.
+> Las reservas (`reservations` e `iotReservations`) son públicas para lectura para que el mapa de parking sea visible sin necesidad de login.
 
 ---
 

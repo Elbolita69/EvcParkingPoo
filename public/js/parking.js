@@ -11,7 +11,7 @@ class ParkingManager {
   }
 
   #listenReservations() {
-    db.collection('blynkReservations').onSnapshot((snap) => {
+    db.collection('iotReservations').onSnapshot((snap) => {
       this.#reservedSpaces = {};
       snap.forEach((doc) => {
         this.#reservedSpaces[doc.id] = doc.data();
@@ -149,7 +149,7 @@ class ParkingManager {
       return;
     }
 
-    await db.collection('blynkReservations').doc(key).set({ name, plate });
+    await db.collection('iotReservations').doc(key).set({ name, plate });
     await db.collection('reservationHistory').add({
       timestamp: new Date().toISOString(),
       space: `Espacio ${parseInt(idx) + 1}`,
@@ -165,7 +165,7 @@ class ParkingManager {
     const key = this.#spaces[idx];
     if (!confirm(`¿Cancelar la reserva del Espacio ${idx + 1}?`)) return;
 
-    const snap = await db.collection('blynkReservations').doc(key).get();
+    const snap = await db.collection('iotReservations').doc(key).get();
     if (snap.exists) {
       const { name, plate } = snap.data();
       await db.collection('reservationHistory').add({
@@ -175,7 +175,7 @@ class ParkingManager {
         plate,
         status: 'Cancelado'
       });
-      await db.collection('blynkReservations').doc(key).delete();
+      await db.collection('iotReservations').doc(key).delete();
     }
   }
 

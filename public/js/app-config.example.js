@@ -9,5 +9,3 @@ firebase.initializeApp({
 
 const auth = firebase.auth();
 const db   = firebase.firestore();
-
-window.BLYNK_TOKEN = 'YOUR_BLYNK_TOKEN';
