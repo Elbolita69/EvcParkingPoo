@@ -142,42 +142,42 @@ REGLAS DE RESPUESTA:
     if (!text || this.#isLoading) return;
     this.#input.value = '';
     this.#addMsg('user', this.#escapeHtml(text));
-    this.#history.push({ role: 'user', parts: [{ text }] });
-    await this.#callGemini();
+    this.#history.push({ role: 'user', content: text });
+    await this.#callGroq();
   }
 
-  async #callGemini() {
+  async #callGroq() {
     this.#isLoading = true;
     this.#sendBtn.disabled = true;
     const typingEl = this.#showTyping();
 
     const context = await this.#getContext();
-    const apiKey  = window.GEMINI_API_KEY || '';
-    const url     = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-    const body = {
-      system_instruction: { parts: [{ text: this.#SYSTEM_PROMPT + context }] },
-      contents: this.#history
-    };
+    const messages = [
+      { role: 'system', content: this.#SYSTEM_PROMPT + context },
+      ...this.#history
+    ];
 
     try {
-      const res  = await fetch(url, {
+      const res  = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${window.GROQ_API_KEY || ''}`
+        },
+        body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages, temperature: 0.7 })
       });
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.error?.message || 'Error API');
 
-      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text
-        || 'Lo siento, no pude procesar tu consulta.';
-      this.#history.push({ role: 'model', parts: [{ text: reply }] });
+      const reply = data.choices?.[0]?.message?.content || 'Lo siento, no pude procesar tu consulta.';
+      this.#history.push({ role: 'assistant', content: reply });
       typingEl.remove();
       this.#addMsg('bot', this.#formatMd(reply));
     } catch (err) {
       typingEl.remove();
-      this.#addMsg('bot', `Error: ${err.message}`);
+      this.#addMsg('bot', 'Ocurrió un error al contactar el asistente. Por favor intenta de nuevo.');
       console.error('[EVC Chatbot]', err);
     } finally {
       this.#isLoading = false;

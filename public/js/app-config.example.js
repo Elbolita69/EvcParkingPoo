@@ -10,4 +10,4 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const db   = firebase.firestore();
 
-window.GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY';
+window.GROQ_API_KEY = 'YOUR_GROQ_API_KEY';
