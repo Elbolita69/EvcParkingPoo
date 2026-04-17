@@ -177,7 +177,7 @@ REGLAS DE RESPUESTA:
       this.#addMsg('bot', this.#formatMd(reply));
     } catch (err) {
       typingEl.remove();
-      this.#addMsg('bot', 'Ocurrió un error al contactar el asistente. Por favor intenta de nuevo.');
+      this.#addMsg('bot', `Error: ${err.message}`);
       console.error('[EVC Chatbot]', err);
     } finally {
       this.#isLoading = false;
