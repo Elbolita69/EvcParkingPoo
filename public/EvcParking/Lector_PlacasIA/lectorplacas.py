@@ -10,6 +10,8 @@ from flask import Flask, render_template, Response, request, jsonify
 from flask_cors import CORS
 import cv2
 import requests
+import base64
+import numpy as np
 from datetime import datetime
 import os
 
@@ -55,6 +57,22 @@ def mostrar_placas():
     return render_template('placas.html')
 
 
+def _encode_frame(image_bytes):
+    """Redimensiona y comprime el frame; retorna data URL base64."""
+    try:
+        nparr = np.frombuffer(image_bytes, np.uint8)
+        img   = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        if img is None:
+            return None
+        h, w = img.shape[:2]
+        if w > 480:
+            img = cv2.resize(img, (480, int(h * 480 / w)))
+        _, buf = cv2.imencode('.jpg', img, [cv2.IMWRITE_JPEG_QUALITY, 65])
+        return 'data:image/jpeg;base64,' + base64.b64encode(buf.tobytes()).decode()
+    except Exception:
+        return None
+
+
 # ── Captura desde webcam (PC) ──────────────────────────────
 @app.route('/leer_placa', methods=['POST'])
 def leer_placa_webcam():
@@ -63,19 +81,10 @@ def leer_placa_webcam():
     if not ret:
         return jsonify(success=False, message='No se pudo acceder a la webcam.')
 
-    tmp = 'temp_capture.jpg'
-    cv2.imwrite(tmp, frame)
-
-    with open(tmp, 'rb') as f:
-        image_bytes = f.read()
-
-    try:
-        os.remove(tmp)
-    except Exception:
-        pass
-
-    data = call_plate_recognizer(image_bytes)
-    return _process_result(data)
+    _, buf        = cv2.imencode('.jpg', frame)
+    image_bytes   = buf.tobytes()
+    data          = call_plate_recognizer(image_bytes)
+    return _process_result(data, image_bytes)
 
 
 # ── Captura desde archivo / cámara móvil ──────────────────
@@ -87,10 +96,10 @@ def leer_placa_upload():
 
     image_bytes = file.read()
     data = call_plate_recognizer(image_bytes, file.filename or 'upload.jpg')
-    return _process_result(data)
+    return _process_result(data, image_bytes)
 
 
-def _process_result(data):
+def _process_result(data, image_bytes=None):
     if data and data.get('results'):
         r = data['results'][0]
         plate      = r.get('plate', '').upper()
@@ -104,7 +113,8 @@ def _process_result(data):
             confidence=confidence,
             vehicleType=vehicle,
             region=region,
-            timestamp=datetime.now().isoformat()
+            timestamp=datetime.now().isoformat(),
+            image=_encode_frame(image_bytes)
         )
     else:
         return jsonify(success=False, message='No se detectó ninguna placa.')
