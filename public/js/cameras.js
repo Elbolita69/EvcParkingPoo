@@ -28,20 +28,24 @@ class LiveCameraScanner extends BaseScanner {
     }
 
     async start() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    facingMode: { ideal: this.#facingMode },
-                    width:      { ideal: 1280 },
-                    height:     { ideal: 720 }
-                }
-            });
-            this.#stream          = stream;
-            this.#video.srcObject = stream;
-            return true;
-        } catch {
-            return false;
+        const constraints = [
+            { video: { facingMode: { ideal: this.#facingMode }, width: { ideal: 1280 }, height: { ideal: 720 } } },
+            { video: { facingMode: { ideal: this.#facingMode } } },
+            { video: { facingMode: this.#facingMode } },
+            { video: true }
+        ];
+
+        for (const config of constraints) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(config);
+                this.#stream          = stream;
+                this.#video.srcObject = stream;
+                return true;
+            } catch (e) {
+                if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') return false;
+            }
         }
+        return false;
     }
 
     captureFrame() {
@@ -301,7 +305,7 @@ class CameraApp {
     #loop     = new AutoScanLoop();
     #cooldown = new ScanCooldown();
     #detector = new PlateDetectorService(PLATE_TOKEN);
-    #repo     = new DetectionRepository(firebase.storage(), db);
+    #repo     = null;
     #ui       = new CameraUI();
     #busy     = false;
 
@@ -313,13 +317,24 @@ class CameraApp {
     }
 
     async init() {
+        try {
+            this.#repo = new DetectionRepository(firebase.storage(), db);
+        } catch (e) {
+            this.#ui.showError('Firebase Storage no disponible. Las capturas no se guardarán.');
+            console.error('Storage init error:', e);
+        }
+
         await this.#setupScanner();
-        this.#repo.listen(25, snap => {
-            const newIds = new Set(
-                snap.docChanges().filter(c => c.type === 'added').map(c => c.doc.id)
-            );
-            this.#ui.renderDetections(snap, newIds);
-        });
+
+        if (this.#repo) {
+            this.#repo.listen(25, snap => {
+                const newIds = new Set(
+                    snap.docChanges().filter(c => c.type === 'added').map(c => c.doc.id)
+                );
+                this.#ui.renderDetections(snap, newIds);
+            });
+        }
+
         document.getElementById('toggleScanBtn')?.addEventListener('click', () => this.toggleScan());
         document.getElementById('switchCamBtn')?.addEventListener('click',  () => this.switchCamera());
     }
@@ -365,12 +380,18 @@ class CameraApp {
             const plate = result.plate.toUpperCase();
             this.#ui.showResult(result);
 
-            if (this.#cooldown.canSave(plate)) {
+            if (this.#repo && this.#cooldown.canSave(plate)) {
                 this.#cooldown.register(plate);
-                await this.#repo.save(blob, result);
+                try {
+                    await this.#repo.save(blob, result);
+                } catch (e) {
+                    this.#ui.showError('Error al guardar la imagen. Verifica las reglas de Firebase Storage.');
+                    console.error('Storage save error:', e);
+                }
             }
-        } catch {
+        } catch (e) {
             this.#ui.setAnalyzing(false);
+            console.error('Scan error:', e);
         } finally {
             this.#busy = false;
         }
