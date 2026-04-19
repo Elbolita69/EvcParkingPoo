@@ -247,6 +247,22 @@
 
 .cam-table tbody tr.new-row td { animation: newDetection 1.5s ease; }
 
+.cam-permission-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: linear-gradient(145deg, #1a1f2a, #252830);
+  border: 2px dashed rgba(220,53,69,.4);
+  border-radius: 12px;
+  color: rgba(255,255,255,.75);
+  text-align: center;
+  padding: 1.5rem;
+}
+.cam-permission-wrap i { color: #dc3545; }
+
 .cam-img-btn {
   background: none;
   border: none;

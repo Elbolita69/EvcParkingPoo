@@ -28,6 +28,8 @@ class LiveCameraScanner extends BaseScanner {
     }
 
     async start() {
+        if (!navigator.mediaDevices?.getUserMedia) return 'unsupported';
+
         const constraints = [
             { video: { facingMode: { ideal: this.#facingMode }, width: { ideal: 1280 }, height: { ideal: 720 } } },
             { video: { facingMode: { ideal: this.#facingMode } } },
@@ -40,12 +42,16 @@ class LiveCameraScanner extends BaseScanner {
                 const stream = await navigator.mediaDevices.getUserMedia(config);
                 this.#stream          = stream;
                 this.#video.srcObject = stream;
-                return true;
+                await new Promise(res => {
+                    if (this.#video.readyState >= 2) return res();
+                    this.#video.addEventListener('canplay', res, { once: true });
+                });
+                return 'ok';
             } catch (e) {
-                if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') return false;
+                if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') return 'denied';
             }
         }
-        return false;
+        return 'error';
     }
 
     captureFrame() {
@@ -59,7 +65,7 @@ class LiveCameraScanner extends BaseScanner {
     async switchCamera() {
         this.destroy();
         this.#facingMode = this.#facingMode === 'environment' ? 'user' : 'environment';
-        return this.start();
+        return await this.start();
     }
 
     async countCameras() {
@@ -258,6 +264,18 @@ class CameraUI {
         if (label) label.textContent = 'Modo archivo';
     }
 
+    showPermissionDenied() {
+        document.getElementById('permissionWrap').style.display = 'flex';
+        document.getElementById('fileWrap').style.display       = 'none';
+        document.getElementById('videoWrap').style.display      = 'none';
+        const btn = document.getElementById('toggleScanBtn');
+        if (btn) btn.style.display = 'none';
+    }
+
+    hidePermissionDenied() {
+        document.getElementById('permissionWrap').style.display = 'none';
+    }
+
     showSwitchBtn(show) {
         document.getElementById('switchCamBtn').style.display = show ? 'block' : 'none';
     }
@@ -302,6 +320,7 @@ class CameraUI {
 
 class CameraApp {
     #scanner  = null;
+    #live     = null;
     #loop     = new AutoScanLoop();
     #cooldown = new ScanCooldown();
     #detector = new PlateDetectorService(PLATE_TOKEN);
@@ -342,24 +361,41 @@ class CameraApp {
     async #setupScanner() {
         const video  = document.getElementById('camVideo');
         const canvas = document.getElementById('snapCanvas');
-        const live   = new LiveCameraScanner(video, canvas);
-        const ok     = await live.start();
+        this.#live   = new LiveCameraScanner(video, canvas);
+        const result = await this.#live.start();
 
-        if (ok) {
-            this.#scanner = live;
-            this.#ui.showLiveMode(true);
-            const count = await live.countCameras();
-            this.#ui.showSwitchBtn(count > 1);
-            this.#loop.start(() => this.#scan());
-            this.#ui.setScanState(true);
+        if (result === 'ok') {
+            this.#activateLive();
+        } else if (result === 'denied') {
+            this.#ui.showPermissionDenied();
         } else {
-            this.#scanner = new FileCameraScanner(
-                document.getElementById('fileInput'),
-                document.getElementById('imgPreview'),
-                () => this.#scan()
-            );
-            this.#ui.showLiveMode(false);
-            this.#ui.setFileMode();
+            this.#activateFile();
+        }
+    }
+
+    #activateLive() {
+        this.#scanner = this.#live;
+        this.#ui.showLiveMode(true);
+        this.#live.countCameras().then(n => this.#ui.showSwitchBtn(n > 1));
+        this.#loop.start(() => this.#scan());
+        this.#ui.setScanState(true);
+    }
+
+    #activateFile() {
+        this.#scanner = new FileCameraScanner(
+            document.getElementById('fileInput'),
+            document.getElementById('imgPreview'),
+            () => this.#scan()
+        );
+        this.#ui.showLiveMode(false);
+        this.#ui.setFileMode();
+    }
+
+    async retryCamera() {
+        const result = await this.#live.start();
+        if (result === 'ok') {
+            this.#ui.hidePermissionDenied();
+            this.#activateLive();
         }
     }
 
@@ -403,8 +439,12 @@ class CameraApp {
     }
 
     async switchCamera() {
-        if (this.#scanner instanceof LiveCameraScanner) {
-            await this.#scanner.switchCamera();
+        if (this.#live) {
+            const result = await this.#live.switchCamera();
+            if (result === 'ok' && this.#scanner !== this.#live) {
+                this.#ui.hidePermissionDenied();
+                this.#activateLive();
+            }
         }
     }
 

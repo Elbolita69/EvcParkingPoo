@@ -109,11 +109,21 @@
               </div>
             </div>
 
-            <!-- File / mobile camera fallback -->
+            <!-- Camera permission denied -->
+            <div id="permissionWrap" style="display:none;" class="cam-permission-wrap">
+              <i class="fa-solid fa-camera-slash fa-3x mb-3"></i>
+              <p class="mb-1 fw-semibold">Acceso a la cámara bloqueado</p>
+              <p class="mb-3" style="font-size:.82rem;opacity:.75;">Ve a Configuración de tu navegador → Permisos → Cámara y permite el acceso a este sitio.</p>
+              <button class="btn cam-capture-btn w-100" onclick="CameraApp.getInstance().retryCamera()">
+                <i class="fa-solid fa-rotate-right me-2"></i>Reintentar
+              </button>
+            </div>
+
+            <!-- File fallback (only when camera truly unavailable) -->
             <div id="fileWrap" style="display:none;" class="cam-file-wrap">
               <label for="fileInput" class="cam-file-label">
                 <i class="fa-solid fa-camera fa-3x mb-2"></i>
-                <span id="fileLabel">Toca aquí para abrir la cámara o seleccionar una foto</span>
+                <span id="fileLabel">Toca para seleccionar una foto</span>
               </label>
               <input type="file" id="fileInput" accept="image/*" capture="environment" class="d-none">
               <div id="previewWrap" style="display:none;" class="cam-preview-wrap mt-2">
