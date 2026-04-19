@@ -219,14 +219,15 @@
         } catch (e) {
           if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') {
             showError(`
-              <strong>⛔ Permiso de cámara bloqueado</strong><br><br>
-              <strong>Chrome Android:</strong><br>
-              1. Toca los <strong>3 puntos ⋮</strong> arriba a la derecha<br>
-              2. <em>Configuración</em> → <em>Configuración del sitio</em> → <em>Cámara</em><br>
-              3. Busca <strong>evc-parking.web.app</strong> → tócalo → <strong>Permitir</strong><br>
+              <strong>⛔ Cámara bloqueada — sigue estos pasos:</strong><br><br>
+              <strong>Paso más rápido:</strong><br>
+              1. Toca la <strong>barra de URL</strong> arriba<br>
+              2. Toca el ícono 🔒 o <strong>"i"</strong> a la <em>izquierda</em> de la dirección<br>
+              3. Toca <strong>Permisos</strong> → <strong>Cámara</strong> → <strong>Permitir</strong><br>
               4. Recarga esta página<br><br>
-              <strong>Alternativa rápida:</strong><br>
-              Toca el candado 🔒 o la <strong>"i"</strong> junto a la URL → <em>Permisos</em> → Cámara → Permitir
+              <strong>Si no ves esa opción:</strong><br>
+              Copia esto en Chrome: <code style="background:rgba(255,255,255,.15);padding:2px 6px;border-radius:4px;">chrome://settings/content/camera</code><br>
+              Busca <strong>evc-parking.web.app</strong> y cámbialo a Permitir
             `);
             return;
           }

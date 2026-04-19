@@ -121,7 +121,12 @@
             <div id="permissionWrap" style="display:none;" class="cam-permission-wrap">
               <i class="fa-solid fa-camera-slash fa-3x mb-3"></i>
               <p class="mb-1 fw-semibold">Acceso a la cámara bloqueado</p>
-              <p class="mb-3" style="font-size:.82rem;opacity:.75;">Ve a Configuración de tu navegador → Permisos → Cámara y permite el acceso a este sitio.</p>
+              <p class="mb-2" style="font-size:.8rem;line-height:1.7;opacity:.85;">
+                <b>1.</b> Toca la barra de URL arriba<br>
+                <b>2.</b> Toca el 🔒 o <b>"i"</b> a la izquierda de la dirección<br>
+                <b>3.</b> Permisos → Cámara → <b>Permitir</b><br>
+                <b>4.</b> Recarga la página y toca Reintentar
+              </p>
               <button class="btn cam-capture-btn w-100" onclick="CameraApp.getInstance().requestCamera()">
                 <i class="fa-solid fa-rotate-right me-2"></i>Reintentar
               </button>
