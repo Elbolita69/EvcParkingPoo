@@ -42,9 +42,11 @@ class LiveCameraScanner extends BaseScanner {
                 const stream = await navigator.mediaDevices.getUserMedia(config);
                 this.#stream          = stream;
                 this.#video.srcObject = stream;
+                try { await this.#video.play(); } catch {}
                 await new Promise(res => {
-                    if (this.#video.readyState >= 2) return res();
-                    this.#video.addEventListener('canplay', res, { once: true });
+                    if (this.#video.videoWidth > 0) return res();
+                    this.#video.addEventListener('loadedmetadata', res, { once: true });
+                    setTimeout(res, 3000);
                 });
                 return 'ok';
             } catch (e) {
@@ -408,13 +410,15 @@ class CameraApp {
     }
 
     #activateFile() {
-        this.#scanner = new FileCameraScanner(
-            document.getElementById('fileInput'),
-            document.getElementById('imgPreview'),
-            () => this.#scan()
-        );
-        this.#ui.showLiveMode(false);
-        this.#ui.setFileMode();
+        setTimeout(() => {
+            this.#scanner = new FileCameraScanner(
+                document.getElementById('fileInput'),
+                document.getElementById('imgPreview'),
+                () => this.#scan()
+            );
+            this.#ui.showLiveMode(false);
+            this.#ui.setFileMode();
+        }, 400);
     }
 
     async retryCamera() {
