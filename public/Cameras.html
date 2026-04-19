@@ -99,11 +99,12 @@
           </div>
           <div class="card-body p-3 d-flex flex-column">
 
-            <!-- Requesting camera (shown while waiting for permission) -->
-            <div id="activateWrap" class="cam-activate-wrap">
-              <div class="cam-spinner mb-3"></div>
-              <p class="mb-1 fw-semibold">Solicitando acceso a la cámara...</p>
-              <p class="mb-0" style="font-size:.82rem;opacity:.75;">Acepta el permiso que aparecerá en tu navegador.</p>
+            <!-- Requesting camera (tap to trigger permission dialog) -->
+            <div id="activateWrap" class="cam-activate-wrap" onclick="CameraApp.getInstance().requestCamera()" style="cursor:pointer;">
+              <i class="fa-solid fa-camera fa-3x mb-3" id="activateIcon"></i>
+              <p class="mb-1 fw-semibold" id="activateTitle">Toca aquí para activar la cámara</p>
+              <p class="mb-0" id="activateDesc" style="font-size:.82rem;opacity:.75;">El navegador te pedirá permiso de acceso.</p>
+              <div id="activateSpinner" class="cam-spinner mt-3" style="display:none;"></div>
             </div>
 
             <!-- Live video (PC / modern mobile) -->
@@ -121,7 +122,7 @@
               <i class="fa-solid fa-camera-slash fa-3x mb-3"></i>
               <p class="mb-1 fw-semibold">Acceso a la cámara bloqueado</p>
               <p class="mb-3" style="font-size:.82rem;opacity:.75;">Ve a Configuración de tu navegador → Permisos → Cámara y permite el acceso a este sitio.</p>
-              <button class="btn cam-capture-btn w-100" onclick="CameraApp.getInstance().retryCamera()">
+              <button class="btn cam-capture-btn w-100" onclick="CameraApp.getInstance().requestCamera()">
                 <i class="fa-solid fa-rotate-right me-2"></i>Reintentar
               </button>
             </div>

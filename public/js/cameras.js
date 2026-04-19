@@ -354,7 +354,14 @@ class CameraApp {
 
         document.getElementById('toggleScanBtn')?.addEventListener('click', () => this.toggleScan());
         document.getElementById('switchCamBtn')?.addEventListener('click',  () => this.switchCamera());
+    }
 
+    async requestCamera() {
+        document.getElementById('activateWrap').style.pointerEvents = 'none';
+        document.getElementById('activateIcon').style.display       = 'none';
+        document.getElementById('activateTitle').textContent        = 'Conectando cámara...';
+        document.getElementById('activateDesc').textContent         = 'Acepta el permiso del navegador.';
+        document.getElementById('activateSpinner').style.display    = 'block';
         await this.#setupScanner();
     }
 
@@ -411,15 +418,13 @@ class CameraApp {
     }
 
     async retryCamera() {
-        if (!this.#live) {
-            await this.#setupScanner();
-            return;
-        }
-        const result = await this.#live.start();
-        if (result === 'ok') {
-            this.#ui.hidePermissionDenied();
-            this.#activateLive();
-        }
+        this.#ui.hidePermissionDenied();
+        document.getElementById('activateWrap').style.display       = 'flex';
+        document.getElementById('activateWrap').style.pointerEvents = 'auto';
+        document.getElementById('activateIcon').style.display       = '';
+        document.getElementById('activateTitle').textContent        = 'Toca aquí para activar la cámara';
+        document.getElementById('activateDesc').textContent         = 'El navegador te pedirá permiso de acceso.';
+        document.getElementById('activateSpinner').style.display    = 'none';
     }
 
     async #scan() {
