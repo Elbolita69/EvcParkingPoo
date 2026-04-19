@@ -246,3 +246,17 @@
 }
 
 .cam-table tbody tr.new-row td { animation: newDetection 1.5s ease; }
+
+.cam-img-btn {
+  background: none;
+  border: none;
+  color: #a0aec0;
+  font-size: .8rem;
+  cursor: pointer;
+  padding: .2rem .35rem;
+  border-radius: 5px;
+  transition: color .15s, background .15s;
+  line-height: 1;
+  vertical-align: middle;
+}
+.cam-img-btn:hover { color: #F8A71C; background: rgba(248,167,28,.1); }

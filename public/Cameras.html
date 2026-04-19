@@ -104,7 +104,8 @@
               <video id="camVideo" autoplay playsinline muted class="cam-video"></video>
               <canvas id="snapCanvas" style="display:none;"></canvas>
               <div class="cam-overlay-label">
-                <i class="fa-solid fa-circle text-danger cam-rec-dot"></i> En vivo
+                <i id="scanStatusDot" class="fa-solid fa-circle cam-rec-dot text-danger"></i>
+                <span id="scanStatusLabel">Escaneando...</span>
               </div>
             </div>
 
@@ -132,12 +133,12 @@
               <span id="errorMsg">No se detectó ninguna placa.</span>
             </div>
 
-            <!-- Capture button -->
+            <!-- Scan controls -->
             <div class="mt-auto pt-3">
-              <button id="captureBtn" class="btn cam-capture-btn w-100" onclick="CameraApp.capture()">
-                <i class="fa-solid fa-circle-dot me-2"></i>Capturar y Analizar Placa
+              <button id="toggleScanBtn" class="btn cam-capture-btn w-100">
+                <i class="fa-solid fa-pause me-2"></i>Pausar Escaneo
               </button>
-              <button id="switchCamBtn" class="btn btn-outline-secondary btn-sm w-100 mt-2" style="display:none;" onclick="CameraApp.switchCamera()">
+              <button id="switchCamBtn" class="btn btn-outline-secondary btn-sm w-100 mt-2" style="display:none;">
                 <i class="fa-solid fa-rotate me-1"></i>Cambiar cámara
               </button>
             </div>
@@ -203,6 +204,20 @@
     </div>
   </main>
 
+  <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content" style="background:#111;border:1px solid rgba(248,167,28,.3);">
+        <div class="modal-header" style="border-bottom:1px solid rgba(248,167,28,.2);">
+          <h6 class="modal-title text-white"><i class="fa-solid fa-image me-2"></i>Foto capturada</h6>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-2 text-center">
+          <img id="modalImage" src="" alt="Captura de placa" style="max-width:100%;border-radius:8px;">
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer class="footer">
     <p><i class="fa-regular fa-copyright me-1"></i>2026 EVC Parking. Todos los derechos reservados.</p>
   </footer>
@@ -210,6 +225,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
   <script src="js/app-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/navbar.js"></script>
