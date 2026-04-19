@@ -352,25 +352,27 @@ class CameraApp {
             });
         }
 
-        document.getElementById('activateCamBtn')?.addEventListener('click', () => this.#requestCamera());
-        document.getElementById('toggleScanBtn')?.addEventListener('click',  () => this.toggleScan());
-        document.getElementById('switchCamBtn')?.addEventListener('click',   () => this.switchCamera());
-    }
+        document.getElementById('toggleScanBtn')?.addEventListener('click', () => this.toggleScan());
+        document.getElementById('switchCamBtn')?.addEventListener('click',  () => this.switchCamera());
 
-    async #requestCamera() {
-        document.getElementById('activateCamBtn').disabled = true;
-        document.getElementById('activateCamBtn').innerHTML =
-            '<span class="spinner-border spinner-border-sm me-2"></span>Conectando...';
         await this.#setupScanner();
     }
 
     async #setupScanner() {
-        document.getElementById('activateWrap').style.display = 'none';
-
         const video  = document.getElementById('camVideo');
         const canvas = document.getElementById('snapCanvas');
         this.#live   = new LiveCameraScanner(video, canvas);
+
+        const permState = await this.#cameraPermissionState();
+
+        if (permState === 'denied') {
+            document.getElementById('activateWrap').style.display = 'none';
+            this.#ui.showPermissionDenied();
+            return;
+        }
+
         const result = await this.#live.start();
+        document.getElementById('activateWrap').style.display = 'none';
 
         if (result === 'ok') {
             this.#activateLive();
@@ -378,6 +380,15 @@ class CameraApp {
             this.#ui.showPermissionDenied();
         } else {
             this.#activateFile();
+        }
+    }
+
+    async #cameraPermissionState() {
+        try {
+            const perm = await navigator.permissions.query({ name: 'camera' });
+            return perm.state;
+        } catch {
+            return 'prompt';
         }
     }
 

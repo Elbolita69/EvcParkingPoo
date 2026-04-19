@@ -255,13 +255,12 @@
   width: 100%;
   aspect-ratio: 4/3;
   background: linear-gradient(145deg, #1a1f2a, #252830);
-  border: 2px dashed rgba(248,167,28,.4);
+  border: 2px solid rgba(248,167,28,.25);
   border-radius: 12px;
   color: rgba(255,255,255,.8);
   text-align: center;
   padding: 1.5rem;
 }
-.cam-activate-wrap i { color: #F8A71C; }
 
 .cam-permission-wrap {
   display: flex;
