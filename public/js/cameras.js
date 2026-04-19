@@ -28,32 +28,20 @@ class LiveCameraScanner extends BaseScanner {
     }
 
     async start() {
-        if (!navigator.mediaDevices?.getUserMedia) return 'unsupported';
-
-        const constraints = [
-            { video: { facingMode: { ideal: this.#facingMode }, width: { ideal: 1280 }, height: { ideal: 720 } } },
-            { video: { facingMode: { ideal: this.#facingMode } } },
-            { video: { facingMode: this.#facingMode } },
-            { video: true }
-        ];
-
-        for (const config of constraints) {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia(config);
-                this.#stream          = stream;
-                this.#video.srcObject = stream;
-                try { await this.#video.play(); } catch {}
-                await new Promise(res => {
-                    if (this.#video.videoWidth > 0) return res();
-                    this.#video.addEventListener('loadedmetadata', res, { once: true });
-                    setTimeout(res, 3000);
-                });
-                return 'ok';
-            } catch (e) {
-                if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') return 'denied';
-            }
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: { ideal: this.#facingMode },
+                    width:      { ideal: 1280 },
+                    height:     { ideal: 720 }
+                }
+            });
+            this.#stream          = stream;
+            this.#video.srcObject = stream;
+            return true;
+        } catch {
+            return false;
         }
-        return 'error';
     }
 
     captureFrame() {
@@ -67,7 +55,7 @@ class LiveCameraScanner extends BaseScanner {
     async switchCamera() {
         this.destroy();
         this.#facingMode = this.#facingMode === 'environment' ? 'user' : 'environment';
-        return await this.start();
+        return this.start();
     }
 
     async countCameras() {
@@ -266,18 +254,6 @@ class CameraUI {
         if (label) label.textContent = 'Modo archivo';
     }
 
-    showPermissionDenied() {
-        document.getElementById('permissionWrap').style.display = 'flex';
-        document.getElementById('fileWrap').style.display       = 'none';
-        document.getElementById('videoWrap').style.display      = 'none';
-        const btn = document.getElementById('toggleScanBtn');
-        if (btn) btn.style.display = 'none';
-    }
-
-    hidePermissionDenied() {
-        document.getElementById('permissionWrap').style.display = 'none';
-    }
-
     showSwitchBtn(show) {
         document.getElementById('switchCamBtn').style.display = show ? 'block' : 'none';
     }
@@ -322,11 +298,10 @@ class CameraUI {
 
 class CameraApp {
     #scanner  = null;
-    #live     = null;
     #loop     = new AutoScanLoop();
     #cooldown = new ScanCooldown();
     #detector = new PlateDetectorService(PLATE_TOKEN);
-    #repo     = null;
+    #repo     = new DetectionRepository(firebase.storage(), db);
     #ui       = new CameraUI();
     #busy     = false;
 
@@ -338,79 +313,31 @@ class CameraApp {
     }
 
     async init() {
-        try {
-            this.#repo = new DetectionRepository(firebase.storage(), db);
-        } catch (e) {
-            this.#ui.showError('Firebase Storage no disponible. Las capturas no se guardarán.');
-            console.error('Storage init error:', e);
-        }
-
-        if (this.#repo) {
-            this.#repo.listen(25, snap => {
-                const newIds = new Set(
-                    snap.docChanges().filter(c => c.type === 'added').map(c => c.doc.id)
-                );
-                this.#ui.renderDetections(snap, newIds);
-            });
-        }
-
+        await this.#setupScanner();
+        this.#repo.listen(25, snap => {
+            const newIds = new Set(
+                snap.docChanges().filter(c => c.type === 'added').map(c => c.doc.id)
+            );
+            this.#ui.renderDetections(snap, newIds);
+        });
         document.getElementById('toggleScanBtn')?.addEventListener('click', () => this.toggleScan());
         document.getElementById('switchCamBtn')?.addEventListener('click',  () => this.switchCamera());
-    }
-
-    async requestCamera() {
-        document.getElementById('activateWrap').style.pointerEvents = 'none';
-        document.getElementById('activateIcon').style.display       = 'none';
-        document.getElementById('activateTitle').textContent        = 'Conectando cámara...';
-        document.getElementById('activateDesc').textContent         = 'Acepta el permiso del navegador.';
-        document.getElementById('activateSpinner').style.display    = 'block';
-        await this.#setupScanner();
     }
 
     async #setupScanner() {
         const video  = document.getElementById('camVideo');
         const canvas = document.getElementById('snapCanvas');
-        this.#live   = new LiveCameraScanner(video, canvas);
+        const live   = new LiveCameraScanner(video, canvas);
+        const ok     = await live.start();
 
-        const permState = await this.#cameraPermissionState();
-
-        if (permState === 'denied') {
-            document.getElementById('activateWrap').style.display = 'none';
-            this.#ui.showPermissionDenied();
-            return;
-        }
-
-        const result = await this.#live.start();
-        document.getElementById('activateWrap').style.display = 'none';
-
-        if (result === 'ok') {
-            this.#activateLive();
-        } else if (result === 'denied') {
-            this.#ui.showPermissionDenied();
+        if (ok) {
+            this.#scanner = live;
+            this.#ui.showLiveMode(true);
+            const count = await live.countCameras();
+            this.#ui.showSwitchBtn(count > 1);
+            this.#loop.start(() => this.#scan());
+            this.#ui.setScanState(true);
         } else {
-            this.#activateFile();
-        }
-    }
-
-    async #cameraPermissionState() {
-        try {
-            const perm = await navigator.permissions.query({ name: 'camera' });
-            return perm.state;
-        } catch {
-            return 'prompt';
-        }
-    }
-
-    #activateLive() {
-        this.#scanner = this.#live;
-        this.#ui.showLiveMode(true);
-        this.#live.countCameras().then(n => this.#ui.showSwitchBtn(n > 1));
-        this.#loop.start(() => this.#scan());
-        this.#ui.setScanState(true);
-    }
-
-    #activateFile() {
-        setTimeout(() => {
             this.#scanner = new FileCameraScanner(
                 document.getElementById('fileInput'),
                 document.getElementById('imgPreview'),
@@ -418,17 +345,7 @@ class CameraApp {
             );
             this.#ui.showLiveMode(false);
             this.#ui.setFileMode();
-        }, 400);
-    }
-
-    async retryCamera() {
-        this.#ui.hidePermissionDenied();
-        document.getElementById('activateWrap').style.display       = 'flex';
-        document.getElementById('activateWrap').style.pointerEvents = 'auto';
-        document.getElementById('activateIcon').style.display       = '';
-        document.getElementById('activateTitle').textContent        = 'Toca aquí para activar la cámara';
-        document.getElementById('activateDesc').textContent         = 'El navegador te pedirá permiso de acceso.';
-        document.getElementById('activateSpinner').style.display    = 'none';
+        }
     }
 
     async #scan() {
@@ -448,18 +365,12 @@ class CameraApp {
             const plate = result.plate.toUpperCase();
             this.#ui.showResult(result);
 
-            if (this.#repo && this.#cooldown.canSave(plate)) {
+            if (this.#cooldown.canSave(plate)) {
                 this.#cooldown.register(plate);
-                try {
-                    await this.#repo.save(blob, result);
-                } catch (e) {
-                    this.#ui.showError('Error al guardar la imagen. Verifica las reglas de Firebase Storage.');
-                    console.error('Storage save error:', e);
-                }
+                await this.#repo.save(blob, result);
             }
-        } catch (e) {
+        } catch {
             this.#ui.setAnalyzing(false);
-            console.error('Scan error:', e);
         } finally {
             this.#busy = false;
         }
@@ -471,12 +382,8 @@ class CameraApp {
     }
 
     async switchCamera() {
-        if (this.#live) {
-            const result = await this.#live.switchCamera();
-            if (result === 'ok' && this.#scanner !== this.#live) {
-                this.#ui.hidePermissionDenied();
-                this.#activateLive();
-            }
+        if (this.#scanner instanceof LiveCameraScanner) {
+            await this.#scanner.switchCamera();
         }
     }
 

@@ -99,14 +99,6 @@
           </div>
           <div class="card-body p-3 d-flex flex-column">
 
-            <!-- Requesting camera (tap to trigger permission dialog) -->
-            <div id="activateWrap" class="cam-activate-wrap" onclick="CameraApp.getInstance().requestCamera()" style="cursor:pointer;">
-              <i class="fa-solid fa-camera fa-3x mb-3" id="activateIcon"></i>
-              <p class="mb-1 fw-semibold" id="activateTitle">Toca aquí para activar la cámara</p>
-              <p class="mb-0" id="activateDesc" style="font-size:.82rem;opacity:.75;">El navegador te pedirá permiso de acceso.</p>
-              <div id="activateSpinner" class="cam-spinner mt-3" style="display:none;"></div>
-            </div>
-
             <!-- Live video (PC / modern mobile) -->
             <div id="videoWrap" class="cam-preview-wrap" style="display:none;">
               <video id="camVideo" autoplay playsinline muted class="cam-video"></video>
@@ -117,28 +109,13 @@
               </div>
             </div>
 
-            <!-- Camera permission denied -->
-            <div id="permissionWrap" style="display:none;" class="cam-permission-wrap">
-              <i class="fa-solid fa-camera-slash fa-3x mb-3"></i>
-              <p class="mb-1 fw-semibold">Acceso a la cámara bloqueado</p>
-              <p class="mb-2" style="font-size:.8rem;line-height:1.7;opacity:.85;">
-                <b>1.</b> Toca la barra de URL arriba<br>
-                <b>2.</b> Toca el 🔒 o <b>"i"</b> a la izquierda de la dirección<br>
-                <b>3.</b> Permisos → Cámara → <b>Permitir</b><br>
-                <b>4.</b> Recarga la página y toca Reintentar
-              </p>
-              <button class="btn cam-capture-btn w-100" onclick="CameraApp.getInstance().requestCamera()">
-                <i class="fa-solid fa-rotate-right me-2"></i>Reintentar
-              </button>
-            </div>
-
-            <!-- File fallback (only when camera truly unavailable) -->
+            <!-- File / mobile camera fallback -->
             <div id="fileWrap" style="display:none;" class="cam-file-wrap">
               <label for="fileInput" class="cam-file-label">
                 <i class="fa-solid fa-camera fa-3x mb-2"></i>
-                <span id="fileLabel">Toca para seleccionar una foto</span>
+                <span id="fileLabel">Toca aquí para abrir la cámara o seleccionar una foto</span>
               </label>
-              <input type="file" id="fileInput" accept="image/*" class="d-none">
+              <input type="file" id="fileInput" accept="image/*" capture="environment" class="d-none">
               <div id="previewWrap" style="display:none;" class="cam-preview-wrap mt-2">
                 <img id="imgPreview" class="cam-video" alt="Preview">
               </div>
