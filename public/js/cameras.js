@@ -343,8 +343,6 @@ class CameraApp {
             console.error('Storage init error:', e);
         }
 
-        await this.#setupScanner();
-
         if (this.#repo) {
             this.#repo.listen(25, snap => {
                 const newIds = new Set(
@@ -354,11 +352,21 @@ class CameraApp {
             });
         }
 
-        document.getElementById('toggleScanBtn')?.addEventListener('click', () => this.toggleScan());
-        document.getElementById('switchCamBtn')?.addEventListener('click',  () => this.switchCamera());
+        document.getElementById('activateCamBtn')?.addEventListener('click', () => this.#requestCamera());
+        document.getElementById('toggleScanBtn')?.addEventListener('click',  () => this.toggleScan());
+        document.getElementById('switchCamBtn')?.addEventListener('click',   () => this.switchCamera());
+    }
+
+    async #requestCamera() {
+        document.getElementById('activateCamBtn').disabled = true;
+        document.getElementById('activateCamBtn').innerHTML =
+            '<span class="spinner-border spinner-border-sm me-2"></span>Conectando...';
+        await this.#setupScanner();
     }
 
     async #setupScanner() {
+        document.getElementById('activateWrap').style.display = 'none';
+
         const video  = document.getElementById('camVideo');
         const canvas = document.getElementById('snapCanvas');
         this.#live   = new LiveCameraScanner(video, canvas);
@@ -392,6 +400,10 @@ class CameraApp {
     }
 
     async retryCamera() {
+        if (!this.#live) {
+            await this.#setupScanner();
+            return;
+        }
         const result = await this.#live.start();
         if (result === 'ok') {
             this.#ui.hidePermissionDenied();

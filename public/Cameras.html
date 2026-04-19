@@ -99,6 +99,16 @@
           </div>
           <div class="card-body p-3 d-flex flex-column">
 
+            <!-- Activate camera prompt (shown first) -->
+            <div id="activateWrap" class="cam-activate-wrap">
+              <i class="fa-solid fa-camera fa-3x mb-3"></i>
+              <p class="mb-1 fw-semibold">Cámara en vivo</p>
+              <p class="mb-3" style="font-size:.82rem;opacity:.75;">El sitio necesita acceso a tu cámara para detectar placas automáticamente.</p>
+              <button class="btn cam-capture-btn w-100" id="activateCamBtn">
+                <i class="fa-solid fa-video me-2"></i>Activar cámara
+              </button>
+            </div>
+
             <!-- Live video (PC / modern mobile) -->
             <div id="videoWrap" class="cam-preview-wrap" style="display:none;">
               <video id="camVideo" autoplay playsinline muted class="cam-video"></video>
