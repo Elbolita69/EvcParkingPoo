@@ -1,4 +1,3 @@
-/* ── Table header ────────────────────────────────────────── */
 #reservationHistoryTable thead th {
   background: linear-gradient(90deg, #1E2A39, #2C3E50);
   color: rgba(255,255,255,.9);
@@ -13,7 +12,6 @@
 #reservationHistoryTable thead th:first-child { border-radius: 10px 0 0 0; }
 #reservationHistoryTable thead th:last-child  { border-radius: 0 10px 0 0; }
 
-/* ── Row hover ───────────────────────────────────────────── */
 #reservationHistoryTable tbody tr {
   transition: background .15s;
 }
@@ -29,7 +27,6 @@
   border-bottom: 1px solid rgba(0,0,0,.04);
 }
 
-/* ── Status badge in table ───────────────────────────────── */
 .badge-reservado {
   background: rgba(248,167,28,.15);
   color: #b07800;
@@ -52,7 +49,6 @@
   letter-spacing: .3px;
 }
 
-/* ── DataTables controls ─────────────────────────────────── */
 .dataTables_wrapper .dataTables_filter input {
   border: 1.5px solid #e2e8f0;
   border-radius: 50px;
@@ -99,7 +95,6 @@
   color: #b07800 !important;
 }
 
-/* ── Export buttons ──────────────────────────────────────── */
 #exportExcel,
 #exportPdf {
   border-radius: 50px;
@@ -116,7 +111,6 @@
   box-shadow: 0 5px 14px rgba(0,0,0,.18);
 }
 
-/* ── Delete button in table ──────────────────────────────── */
 .delete-btn {
   border-radius: 50px;
   font-size: .76rem;

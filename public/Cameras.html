@@ -56,7 +56,6 @@
     </div>
   </header>
 
-  <!-- Access denied modal -->
   <div class="modal fade" id="accessDeniedModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -91,7 +90,6 @@
   <main class="container py-4">
     <div class="row g-4">
 
-      <!-- ── Capture column ─────────────────────────── -->
       <div class="col-lg-5">
         <div class="card h-100">
           <div class="card-header cam-header">
@@ -99,7 +97,6 @@
           </div>
           <div class="card-body p-3 d-flex flex-column">
 
-            <!-- Live video (PC / modern mobile) -->
             <div id="videoWrap" class="cam-preview-wrap" style="display:none;">
               <video id="camVideo" autoplay playsinline muted class="cam-video"></video>
               <canvas id="snapCanvas" style="display:none;"></canvas>
@@ -109,7 +106,6 @@
               </div>
             </div>
 
-            <!-- File / mobile camera fallback -->
             <div id="fileWrap" style="display:none;" class="cam-file-wrap">
               <label for="fileInput" class="cam-file-label">
                 <i class="fa-solid fa-camera fa-3x mb-2"></i>
@@ -121,19 +117,16 @@
               </div>
             </div>
 
-            <!-- Loading spinner -->
             <div id="loadingWrap" class="text-center py-3" style="display:none;">
               <div class="cam-spinner"></div>
               <p class="text-muted mt-2 mb-0" style="font-size:.85rem;">Analizando placa...</p>
             </div>
 
-            <!-- Error message -->
             <div id="errorWrap" class="alert cam-alert-danger mt-2" style="display:none;">
               <i class="fa-solid fa-triangle-exclamation me-1"></i>
               <span id="errorMsg">No se detectó ninguna placa.</span>
             </div>
 
-            <!-- Scan controls -->
             <div class="mt-auto pt-3">
               <button id="toggleScanBtn" class="btn cam-capture-btn w-100">
                 <i class="fa-solid fa-pause me-2"></i>Pausar Escaneo
@@ -146,10 +139,8 @@
         </div>
       </div>
 
-      <!-- ── Result + history column ─────────────────── -->
       <div class="col-lg-7 d-flex flex-column gap-4">
 
-        <!-- Last detection card -->
         <div class="card" id="resultCard" style="display:none;">
           <div class="card-header cam-header">
             <i class="fa-solid fa-circle-check me-2"></i>Última Detección
@@ -170,7 +161,6 @@
           </div>
         </div>
 
-        <!-- Live detections table -->
         <div class="card flex-grow-1">
           <div class="card-header cam-header d-flex align-items-center justify-content-between">
             <span><i class="fa-solid fa-list me-2"></i>Historial en Tiempo Real</span>

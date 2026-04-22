@@ -38,7 +38,6 @@ body {
 
 main { flex: 1; }
 
-/* ── Navbar ─────────────────────────────────────────────── */
 .navbar {
   background: linear-gradient(90deg, #111820 0%, #1A2535 55%, #1E2A39 100%) !important;
   padding: .6rem 1rem;
@@ -48,7 +47,6 @@ main { flex: 1; }
 
 .navbar-brand img { height: 36px; filter: drop-shadow(0 1px 4px rgba(0,0,0,.4)); }
 
-/* Nav links base */
 .navbar-nav .nav-link {
   color: rgba(255,255,255,.68) !important;
   font-weight: 500;
@@ -71,7 +69,6 @@ main { flex: 1; }
   font-weight: 600;
 }
 
-/* Dropdown admin */
 .navbar-nav .dropdown-menu {
   background: #1A2535;
   border: 1px solid rgba(255,255,255,.1);
@@ -96,7 +93,6 @@ main { flex: 1; }
 
 .navbar-nav .dropdown-divider { border-color: rgba(255,255,255,.1); }
 
-/* Vertical divider between nav links and auth area */
 .nav-divider {
   width: 1px;
   height: 22px;
@@ -105,7 +101,6 @@ main { flex: 1; }
   align-self: center;
 }
 
-/* User greeting */
 .navbar-greeting {
   color: rgba(255,255,255,.55);
   font-size: .78rem;
@@ -117,7 +112,6 @@ main { flex: 1; }
 
 .navbar-greeting.visible { display: inline-block; }
 
-/* Login / logout button — visually distinct */
 .nav-login-btn {
   color: var(--accent) !important;
   border: 1.5px solid rgba(248,167,28,.5) !important;
@@ -148,7 +142,6 @@ main { flex: 1; }
   .navbar-greeting { padding: .3rem .85rem; }
 }
 
-/* ── Hero ────────────────────────────────────────────────── */
 .hero-section {
   background: linear-gradient(135deg, #c63800 0%, #E8491D 40%, #F8A71C 100%);
   padding: 90px 20px;
@@ -199,7 +192,6 @@ main { flex: 1; }
   padding: 50px 20px 68px !important;
 }
 
-/* ── Cards ───────────────────────────────────────────────── */
 .card {
   border: none;
   border-radius: var(--radius);
@@ -218,7 +210,6 @@ main { flex: 1; }
   border-bottom: none;
 }
 
-/* ── Buttons ─────────────────────────────────────────────── */
 .btn {
   border-radius: 50px;
   font-weight: 600;
@@ -254,7 +245,6 @@ main { flex: 1; }
   box-shadow: 0 4px 12px rgba(0,0,0,.15);
 }
 
-/* ── Modals ──────────────────────────────────────────────── */
 .modal-content {
   border: none;
   border-radius: var(--radius);
@@ -284,7 +274,6 @@ main { flex: 1; }
   color: white;
 }
 
-/* ── Forms ───────────────────────────────────────────────── */
 .form-control, .form-select {
   border-radius: var(--radius-sm);
   border: 1.5px solid #e2e8f0;
@@ -308,7 +297,6 @@ main { flex: 1; }
   letter-spacing: .35px;
 }
 
-/* ── Footer ──────────────────────────────────────────────── */
 footer.footer {
   background: linear-gradient(90deg, #161f2b, #1E2A39);
   color: rgba(255,255,255,.55);
@@ -321,7 +309,6 @@ footer.footer {
 
 footer.footer p { margin-bottom: 0; }
 
-/* ── Feature cards (index) ───────────────────────────────── */
 .feature-card {
   background: white;
   border-radius: var(--radius);
@@ -366,7 +353,6 @@ footer.footer p { margin-bottom: 0; }
   line-height: 1.65;
 }
 
-/* ── Misc ────────────────────────────────────────────────── */
 .section-title   { font-size: 1.6rem; font-weight: 700; color: var(--primary); margin-bottom: .4rem; }
 .section-subtitle{ color: var(--text-muted); font-size: .95rem; margin-bottom: 2rem; }
 
@@ -379,7 +365,6 @@ footer.footer p { margin-bottom: 0; }
 
 .animate-in { animation: fadeInUp .4s ease both; }
 
-/* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 768px) {
   .hero-section { padding: 60px 15px 72px; }
   .hero-sm      { padding: 38px 15px 60px !important; }

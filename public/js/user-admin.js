@@ -18,7 +18,6 @@ class UserAdminManager {
         if (!container) return;
         container.innerHTML = '';
 
-        /* ── Stats bar ─────────────────────────────── */
         const total  = this.#users.length;
         const admins = this.#users.filter(u => u.role === 'admin').length;
         const regular = total - admins;
@@ -59,14 +58,12 @@ class UserAdminManager {
           </div>`;
         container.appendChild(statsRow);
 
-        /* ── Section title ─────────────────────────── */
         const title = document.createElement('h6');
         title.className = 'fw-700 mb-3 text-uppercase';
         title.style.cssText = 'color:#718096;letter-spacing:.6px;font-size:.78rem;';
         title.innerHTML = '<i class="fa-solid fa-users me-2" style="color:#F8A71C;"></i>Lista de Usuarios';
         container.appendChild(title);
 
-        /* ── User cards grid ───────────────────────── */
         const grid = document.createElement('div');
         grid.className = 'row g-3';
 

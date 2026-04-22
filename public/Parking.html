@@ -59,7 +59,6 @@
 
   <main class="container py-4">
 
-    <!-- Availability bar -->
     <div class="av-card mb-4">
       <div class="av-left">
         <i class="fa-solid fa-circle-check text-success me-2"></i>
@@ -72,17 +71,14 @@
       </div>
     </div>
 
-    <!-- Legend -->
     <div class="d-flex justify-content-center gap-3 flex-wrap mb-4" style="font-size:.82rem;">
       <span><i class="fa-solid fa-circle text-success me-1"></i>Disponible</span>
       <span><i class="fa-solid fa-circle text-danger me-1"></i>Ocupado</span>
       <span><i class="fa-solid fa-circle" style="color:#F8A71C;"></i> <span class="ms-1">Reservado</span></span>
     </div>
 
-    <!-- Spaces -->
     <div class="row justify-content-center g-3" id="spacesContainer"></div>
 
-    <!-- Servo controls (admin only) -->
     <div class="row justify-content-center g-3 mt-4" id="servoControls" style="display:none;">
       <div class="col-12 col-lg-5">
         <div class="card sensor-card">
@@ -120,14 +116,10 @@
 
   </main>
 
-  <!-- ═══════════════════════════════════════════
-       BOOKING MODAL — 4 steps
-  ══════════════════════════════════════════════ -->
   <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content booking-modal-content">
 
-        <!-- Header -->
         <div class="booking-modal-header">
           <div>
             <h5 class="mb-0 fw-bold text-white"><i class="fa-solid fa-calendar-plus me-2"></i>Nueva Reserva</h5>
@@ -136,7 +128,6 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
 
-        <!-- Steps indicator -->
         <div class="steps-bar">
           <div class="step-dot active" data-step="1"><span>1</span><label>Vehículo</label></div>
           <div class="step-line-seg"></div>
@@ -149,7 +140,6 @@
 
         <div class="modal-body p-4">
 
-          <!-- ── STEP 1: Vehicle data ── -->
           <div class="booking-step-panel active" data-step="1">
             <h6 class="step-title"><i class="fa-solid fa-user-pen me-2" style="color:#F8A71C;"></i>Datos del Vehículo</h6>
             <form id="bookingForm" autocomplete="off">
@@ -176,7 +166,6 @@
             </div>
           </div>
 
-          <!-- ── STEP 2: Duration & price ── -->
           <div class="booking-step-panel" data-step="2">
             <h6 class="step-title"><i class="fa-solid fa-clock me-2" style="color:#F8A71C;"></i>Duración y Precio</h6>
 
@@ -221,11 +210,9 @@
             </div>
           </div>
 
-          <!-- ── STEP 3: Payment ── -->
           <div class="booking-step-panel" data-step="3">
             <h6 class="step-title"><i class="fa-solid fa-credit-card me-2" style="color:#F8A71C;"></i>Información de Pago</h6>
 
-            <!-- Card visual -->
             <div class="card-visual mb-4">
               <div class="cv-top">
                 <div class="cv-chip"></div>
@@ -244,7 +231,6 @@
               </div>
             </div>
 
-            <!-- Card form -->
             <form id="cardForm" autocomplete="off">
               <div class="mb-3">
                 <label class="form-label">Número de tarjeta</label>
@@ -270,7 +256,6 @@
               </div>
             </form>
 
-            <!-- Payment summary -->
             <div class="pay-summary">
               <div class="pay-row"><span>Espacio</span><strong id="paySpot">—</strong></div>
               <div class="pay-row"><span>Placa</span><strong id="payPlate">—</strong></div>
@@ -291,7 +276,6 @@
             </p>
           </div>
 
-          <!-- ── STEP 4: Confirmation ── -->
           <div class="booking-step-panel" data-step="4">
             <div class="conf-success">
               <div class="conf-icon"><i class="fa-solid fa-circle-check"></i></div>
@@ -327,9 +311,6 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════
-       CANCEL CONFIRMATION MODAL
-  ══════════════════════════════════════════════ -->
   <div class="modal fade" id="cancelModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width:420px;">
       <div class="modal-content booking-modal-content">
@@ -372,7 +353,6 @@
     </div>
   </div>
 
-  <!-- Access denied / session modals -->
   <div class="modal fade" id="accessDeniedModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">

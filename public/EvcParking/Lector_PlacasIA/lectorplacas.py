@@ -1,11 +1,3 @@
-"""
-EVC Parking — Lector de Placas (Flask local server)
-Requisitos: pip install flask flask-cors opencv-python requests
-Uso: python lectorplacas.py
-Acceso PC:     http://localhost:5000
-Acceso móvil:  http://<IP-LAN>:5000   (misma red WiFi)
-"""
-
 from flask import Flask, render_template, Response, request, jsonify
 from flask_cors import CORS
 import cv2
@@ -18,7 +10,6 @@ CORS(app)
 
 PLATE_TOKEN = '94e38f36dce5e23afbea8d2b194b67a99a326215'
 
-# Webcam (solo PC)
 cap = None
 
 def get_cap():
@@ -29,7 +20,6 @@ def get_cap():
 
 
 def call_plate_recognizer(image_bytes, filename='capture.jpg'):
-    """Llama a la API de PlateRecognizer y retorna los resultados."""
     try:
         response = requests.post(
             'https://api.platerecognizer.com/v1/plate-reader/',
@@ -43,8 +33,6 @@ def call_plate_recognizer(image_bytes, filename='capture.jpg'):
         return None
 
 
-# ── Routes ────────────────────────────────────────────────
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -55,7 +43,6 @@ def mostrar_placas():
     return render_template('placas.html')
 
 
-# ── Captura desde webcam (PC) ──────────────────────────────
 @app.route('/leer_placa', methods=['POST'])
 def leer_placa_webcam():
     camera = get_cap()
@@ -78,7 +65,6 @@ def leer_placa_webcam():
     return _process_result(data)
 
 
-# ── Captura desde archivo / cámara móvil ──────────────────
 @app.route('/leer_placa_upload', methods=['POST'])
 def leer_placa_upload():
     file = request.files.get('image')
@@ -110,7 +96,6 @@ def _process_result(data):
         return jsonify(success=False, message='No se detectó ninguna placa.')
 
 
-# ── Video stream (PC webcam) ───────────────────────────────
 @app.route('/video_feed')
 def video_feed():
     def generate():

@@ -85,3 +85,6 @@ Thumbs.db
 .agents/
 .claude/
 CLAUDE.md
+
+# Diagramas UML (solo uso interno)
+public/uml_diagrams.html

@@ -1,4 +1,3 @@
-/* ── Parking lot container ───────────────────────────────── */
 .parking-lot-wrap {
   background: #1c1f26;
   border-radius: 14px;
@@ -16,7 +15,6 @@
   padding-left: 2px;
 }
 
-/* Lane divider between rows */
 .lot-lane {
   height: 28px;
   display: flex;
@@ -39,7 +37,6 @@
   margin: 0 10px;
 }
 
-/* ── Individual parking spot ─────────────────────────────── */
 .parking-spot {
   background: #252830;
   border: 2px dashed #3a3f4b;
@@ -65,7 +62,6 @@
   box-shadow: 0 6px 20px rgba(248,167,28,.25), inset 0 0 0 1px rgba(248,167,28,.1);
 }
 
-/* Occupied → red, no pointer */
 .parking-spot.bg-danger {
   background: #2a1a1a !important;
   border-color: #7a2020;
@@ -81,7 +77,6 @@
   transform: none;
 }
 
-/* ── Top-down car SVG inside spot ────────────────────────── */
 .spot-car-svg {
   width: 42px;
   height: auto;
@@ -102,7 +97,6 @@
   to   { transform: scale(1);  opacity: 1;  }
 }
 
-/* ── Labels ──────────────────────────────────────────────── */
 .spot-label {
   font-size: .82rem;
   font-weight: 800;
@@ -125,7 +119,6 @@
 .spot-status-libre    { background: rgba(40,167,69,.2);  color: #5cb85c; }
 .spot-status-ocupado  { background: rgba(220,53,69,.2);  color: #e07b7b; }
 
-/* ── Custom submit button ────────────────────────────────── */
 .custom-btn {
   background: linear-gradient(135deg, #E8491D, #F8A71C);
   border: none;
@@ -144,7 +137,6 @@
   color: white;
 }
 
-/* ── Legend badges ───────────────────────────────────────── */
 .lot-legend {
   display: flex;
   gap: 1rem;
@@ -164,7 +156,6 @@
 .legend-dot-free     { background: #3a3f4b; border: 1.5px dashed #6c757d; }
 .legend-dot-occupied { background: #7a2020; }
 
-/* ── Availability card ───────────────────────────────────── */
 .av-card {
   display: flex;
   align-items: center;
@@ -199,7 +190,6 @@
   transition: width .6s ease;
 }
 
-/* ── Booking modal ───────────────────────────────────────── */
 .booking-modal-content {
   background: #161920;
   border: 1px solid rgba(255,255,255,.08);
@@ -229,7 +219,6 @@
   display: inline-block;
 }
 
-/* ── Steps bar ───────────────────────────────────────────── */
 .steps-bar {
   display: flex;
   align-items: center;
@@ -300,7 +289,6 @@
   max-width: 60px;
 }
 
-/* ── Step panels ─────────────────────────────────────────── */
 .booking-step-panel { display: none; }
 .booking-step-panel.active { display: block; }
 
@@ -324,7 +312,6 @@
 
 .info-row strong { color: #F8A71C; }
 
-/* ── Duration grid ───────────────────────────────────────── */
 .duration-grid {
   display: grid;
   grid-template-columns: repeat(5,1fr);
@@ -356,7 +343,6 @@
   box-shadow: 0 3px 10px rgba(248,167,28,.3);
 }
 
-/* ── Price card ──────────────────────────────────────────── */
 .price-card {
   background: rgba(255,255,255,.04);
   border: 1px solid rgba(255,255,255,.07);
@@ -400,7 +386,6 @@
   margin-bottom: 0;
 }
 
-/* ── Credit card visual ──────────────────────────────────── */
 .card-visual {
   background: linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);
   border-radius: 16px;
@@ -493,7 +478,6 @@
   letter-spacing: .5px;
 }
 
-/* ── Payment summary ─────────────────────────────────────── */
 .pay-summary {
   background: rgba(255,255,255,.04);
   border: 1px solid rgba(255,255,255,.07);
@@ -522,7 +506,6 @@
 
 .pay-row-total strong { color: #F8A71C !important; font-size: 1rem; }
 
-/* ── Booking buttons ─────────────────────────────────────── */
 .btn-booking-primary {
   background: linear-gradient(135deg,#E8491D,#F8A71C);
   border: none;
@@ -582,7 +565,6 @@
   transform: none;
 }
 
-/* ── Confirmation screen ─────────────────────────────────── */
 .conf-success {
   text-align: center;
   padding: .5rem 0 1.2rem;
@@ -664,7 +646,6 @@
 
 .conf-row-total strong { color: #28a745 !important; font-size: 1.05rem; }
 
-/* ── Dark form inputs inside modal ───────────────────────── */
 .booking-modal-content .form-control {
   background: rgba(255,255,255,.06);
   border-color: rgba(255,255,255,.12);
